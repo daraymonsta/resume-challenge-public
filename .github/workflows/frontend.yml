@@ -1,0 +1,48 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Blob storage static website CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for changes to the "front-end" folder of the main branch
+  push:
+    branches: [ main ]
+    paths: front-end/**
+  pull_request:
+    branches: [ main ]
+    paths: front-end/**
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Logs into Azure with GitHub secret
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_RESUMESTORAGE002 }}
+      
+      - name: Upload to blob storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob upload-batch --account-name resumestorage002 --auth-mode key -d '$web' -s .
+      
+      - name: Purge CDN endpoint
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az cdn endpoint purge --content-paths  "/*" --profile-name "resumecdn002" --name "https://rossi.azureedge.net" --resource-group "CloudResumeChallenge"
+
+      # Azure logout
+      - name: logout
+        run: |
+            az logout
+        if: always()
