@@ -36,13 +36,13 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob upload-batch --account-name resumestorage002 --auth-mode key -d '$web' -s front-end/.
+            az storage blob upload-batch --account-name resumestorage002 --auth-mode key -d '$web' -s front-end/. --overwrite
       
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az cdn endpoint purge --content-paths  "/*" --profile-name "resumecdn002" --name "https://rossi.azureedge.net" --resource-group "CloudResumeChallenge"
+            az cdn endpoint purge --content-paths "/*" --profile-name "resumecdn002" --name "rossi.azureedge.net" --resource-group "CloudResumeChallenge"
 
       # Azure logout
       - name: logout
