@@ -1,4 +1,4 @@
-# This is a basic workflow to help you get started with Actions
+# This validates the ARM templates, before uploading them to Azure as an artifact
 
 name: Validate ARM Templates CI
 
