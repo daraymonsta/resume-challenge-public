@@ -17,7 +17,7 @@ on:
 
 env:
   region: uksouth
-  resourceGroup: CloudResumeChallenge
+  resourceGroup: CloudResumeChallengeV2
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -86,6 +86,13 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
+          
+      - name: Azure CLI script - Create Resource Group
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az group create --name {${{ env.resourceGroup }} } --location {${{ env.region }}}
 
       - name: Deploy ARM Template
         id: deployarmtemplate
