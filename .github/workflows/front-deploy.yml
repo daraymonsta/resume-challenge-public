@@ -43,7 +43,7 @@ jobs:
         shell: bash
         continue-on-error: true
         run: |
-          echo "${{ toJSON(fromJSON(steps.pathtest.outputs.results)) }}"
+          echo "RESULTS: ${{ steps.pathtest.outputs.results }}"
 
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
