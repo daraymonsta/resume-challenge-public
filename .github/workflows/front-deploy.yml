@@ -36,7 +36,7 @@ jobs:
         id: armttkvalidation
         uses: aliencube/arm-ttk-actions@v0.3
         with:
-          path: front-end/arm-templates/*
+          path: ./front-end/arm-templates
           
       - name: Display Test Result
         shell: bash
@@ -56,7 +56,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
           region: ${{ env.region }}
           resourceGroupName: ${{ env.resourceGroup }}
-          template: $GITHUB_WORKSPACE/front-end/arm-templates/main-front-deploy.json
+          template: ${{ GITHUB_WORKSPACE }}/front-end/arm-templates/main-front-deploy.json
           deploymentMode: Validate
           # parameters: front-end/arm-templates/parameters.json
       
