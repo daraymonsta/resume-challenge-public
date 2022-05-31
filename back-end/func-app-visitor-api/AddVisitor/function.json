@@ -1,0 +1,42 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "authLevel": "function",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": [
+        "get",
+        "post"
+      ],
+      "route":"AddAVisitor/{*url}"
+    },
+    {
+      "type": "cosmosDB",
+      "direction": "in",
+      "name": "cosmosIn",
+      "databaseName": "ResumeDB",
+      "collectionName": "VisitorCount",
+      "createIfNotExists": true,
+      "connectionStringSetting": "AzureCosmosDBConnectionString",
+      "url": "{Query.url}",
+      "sqlQuery": "SELECT * from c WHERE c.url = {url}"
+    },
+    {
+      "name": "cosmos",
+      "type": "cosmosDB",
+      "direction": "out",
+      "ConnectionStringSetting": "AzureCosmosDBConnectionString",
+      "databaseName": "ResumeDB",
+      "collectionName": "VisitorCount",
+      "createIfNotExists": true
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "$return",
+      "dataType": "string" 
+    }
+  ]
+}
