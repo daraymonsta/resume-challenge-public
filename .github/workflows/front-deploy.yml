@@ -37,6 +37,7 @@ jobs:
         uses: aliencube/arm-ttk-actions@v0.3
         with:
           path: ./front-end/arm-templates
+          skips: '"apiVersions Should Be Recent"'
           
       - name: Display Test Result
         shell: bash
