@@ -17,7 +17,7 @@ on:
 
 env:
   region: uksouth
-  resGroup: CloudResumeChallengeV2
+  resourceGroup: CloudResumeChallengeV2
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -36,7 +36,7 @@ jobs:
         id: armttkvalidation
         uses: aliencube/arm-ttk-actions@v0.3
         with:
-          path: back-end/arm-templates/*
+          path: back-end/arm-templates/main-back-deploy.json
           
       - name: Display Test Result
         shell: bash
@@ -55,6 +55,7 @@ jobs:
           scope: resourcegroup
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
           region: ${{ env.region }}
+          resourceGroupName: ${{ env.resourceGroup }}
           template: back-end/arm-templates/main-back-deploy.json
           deploymentMode: Validate
           # parameters: back-end/arm-templates/parameters.json
@@ -92,6 +93,7 @@ jobs:
           scope: resourcegroup
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
           region: ${{ env.region }}
+          resourceGroupName: ${{ env.resourceGroup }}
           template: back-end/arm-templates/main-back-deploy.json
           deploymentMode: Incremental
           #parameters: back-end/arm-templates/parameters.json
