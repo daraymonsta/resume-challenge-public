@@ -1,0 +1,292 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "func_app_name": {
+            "defaultValue": "az-func-visitor-api2",
+            "type": "String"
+        },
+        "serverfarms_ASP_CloudResumeChallenge_b2ff_externalid": {
+            "defaultValue": "/subscriptions/b1b5e520-9cbf-470e-8e47-d85132b47ad4/resourceGroups/CloudResumeChallenge/providers/Microsoft.Web/serverfarms/ASP-CloudResumeChallenge-b2ff",
+            "type": "String"
+        },
+        "resource_location": {
+            "defaultValue": "uksouth",
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('func_app_name')]",
+            "location": "[parameters('resource_location')]",
+            "kind": "functionapp,linux",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('func_app_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('func_app_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[parameters('serverfarms_ASP_CloudResumeChallenge_b2ff_externalid')]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "PYTHON|3.9",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": false,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 200,
+                    "minimumElasticInstanceCount": 0
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "D1A3CE5C14F3A79D63FD18178253921CDF3A094D61EAD55B149CCDC625E02495",
+                "containerSize": 1536,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('func_app_name'), '/ftp')]",
+            "location": "[parameters('resource_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('func_app_name'))]"
+            ],
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('func_app_name'), '/scm')]",
+            "location": "[parameters('resource_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('func_app_name'))]"
+            ],
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('func_app_name'), '/web')]",
+            "location": "[parameters('resource_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('func_app_name'))]"
+            ],
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "PYTHON|3.9",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "remoteDebuggingVersion": "VS2019",
+                "httpLoggingEnabled": false,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$az-func-visitor-api2",
+                "scmType": "None",
+                "use32BitWorkerProcess": false,
+                "webSocketsEnabled": false,
+                "alwaysOn": false,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": false
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetRouteAllEnabled": false,
+                "vnetPrivatePortsCount": 0,
+                "cors": {
+                    "allowedOrigins": [
+                        "https://portal.azure.com"
+                    ],
+                    "supportCredentials": false
+                },
+                "apiManagementConfig": {},
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.0",
+                "ftpsState": "AllAllowed",
+                "preWarmedInstanceCount": 0,
+                "functionAppScaleLimit": 200,
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 0,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('func_app_name'), '/AddVisitor')]",
+            "location": "[parameters('resource_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('func_app_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/AddVisitor/",
+                "script_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/AddVisitor/__init__.py",
+                "config_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/AddVisitor/function.json",
+                "test_data_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/tmp/FunctionsData/AddVisitor.dat",
+                "href": "https://az-func-visitor-api2.azurewebsites.net/admin/functions/AddVisitor",
+                "config": {},
+                "invoke_url_template": "https://az-func-visitor-api2.azurewebsites.net/api/addavisitor/{*url}",
+                "language": "python",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('func_app_name'), '/Delete')]",
+            "location": "[parameters('resource_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('func_app_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/Delete/",
+                "script_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/Delete/__init__.py",
+                "config_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/Delete/function.json",
+                "test_data_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/tmp/FunctionsData/Delete.dat",
+                "href": "https://az-func-visitor-api2.azurewebsites.net/admin/functions/Delete",
+                "config": {},
+                "invoke_url_template": "https://az-func-visitor-api2.azurewebsites.net/api/delete",
+                "language": "python",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('func_app_name'), '/ListAll')]",
+            "location": "[parameters('resource_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('func_app_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/ListAll/",
+                "script_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/ListAll/__init__.py",
+                "config_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/ListAll/function.json",
+                "test_data_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/tmp/FunctionsData/ListAll.dat",
+                "href": "https://az-func-visitor-api2.azurewebsites.net/admin/functions/ListAll",
+                "config": {},
+                "invoke_url_template": "https://az-func-visitor-api2.azurewebsites.net/api/listall",
+                "language": "python",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('func_app_name'), '/NewVisitor')]",
+            "location": "[parameters('resource_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('func_app_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/NewVisitor/",
+                "script_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/NewVisitor/__init__.py",
+                "config_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/NewVisitor/function.json",
+                "test_data_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/tmp/FunctionsData/NewVisitor.dat",
+                "href": "https://az-func-visitor-api2.azurewebsites.net/admin/functions/NewVisitor",
+                "config": {},
+                "invoke_url_template": "https://az-func-visitor-api2.azurewebsites.net/api/anewvisitor/{*url}",
+                "language": "python",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('func_app_name'), '/RunTests')]",
+            "location": "[parameters('resource_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('func_app_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/RunTests/",
+                "script_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/RunTests/__init__.py",
+                "config_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/home/site/wwwroot/RunTests/function.json",
+                "test_data_href": "https://az-func-visitor-api2.azurewebsites.net/admin/vfs/tmp/FunctionsData/RunTests.dat",
+                "href": "https://az-func-visitor-api2.azurewebsites.net/admin/functions/RunTests",
+                "config": {},
+                "invoke_url_template": "https://az-func-visitor-api2.azurewebsites.net/api/runtests",
+                "language": "python",
+                "isDisabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('func_app_name'), '/', parameters('func_app_name'), '.azurewebsites.net')]",
+            "location": "[parameters('resource_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('func_app_name'))]"
+            ],
+            "properties": {
+                "siteName": "az-func-visitor-api2",
+                "hostNameType": "Verified"
+            }
+        }
+    ]
+}
