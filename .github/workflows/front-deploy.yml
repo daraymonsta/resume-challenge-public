@@ -56,7 +56,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
           region: ${{ env.region }}
           resourceGroupName: ${{ env.resourceGroup }}
-          template: front-end/arm-templates/main-front-deploy.json
+          template: $GITHUB_WORKSPACE/front-end/arm-templates/main-front-deploy.json
           deploymentMode: Validate
           # parameters: front-end/arm-templates/parameters.json
       
@@ -67,36 +67,6 @@ jobs:
           # A file, directory or wildcard pattern that describes what to upload
           path: front-end/arm-templates/*
           if-no-files-found: error
-
-  # second job called "PROD" deploys backend infrastructure using build artifact already validated + uploaded to Azure
-  PROD:
-    name: Deploy Back End to PROD CI
-    if: github.event.ref == 'refs/heads/main'
-    needs: [validation]
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v2.0.8
-        with:
-          name: ResumeFrontendTemplate
-
-      # Logs into Azure with GitHub secret
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
-
-      - name: Deploy ARM Template
-        id: deployarmtemplate
-        uses: Azure/arm-deploy@v1
-        with:
-          scope: resourcegroup
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
-          region: ${{ env.region }}
-          resourceGroupName: ${{ env.resourceGroup }}
-          template: front-end/arm-templates/main-front-deploy.json
-          deploymentMode: Incremental
-          # parameters: front-end/arm-templates/parameters.json
 
       # Azure logout
       - name: logout
