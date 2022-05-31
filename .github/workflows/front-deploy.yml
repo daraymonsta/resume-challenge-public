@@ -56,7 +56,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
           region: ${{ env.region }}
           resourceGroupName: ${{ env.resourceGroup }}
-          template: ${{ GITHUB_WORKSPACE }}/front-end/arm-templates/main-front-deploy.json
+          template: front-end/arm-templates/main-front-deploy.json
           deploymentMode: Validate
           # parameters: front-end/arm-templates/parameters.json
       
