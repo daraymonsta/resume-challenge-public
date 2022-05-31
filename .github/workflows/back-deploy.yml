@@ -49,6 +49,13 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
+          
+      - name: Azure CLI script - Create Resource Group
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az group create --name {${{ env.resourceGroup }} } --location {${{ env.region }}}
       
       - name: Validate ARM Template
         uses: Azure/arm-deploy@v1
@@ -87,13 +94,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
           
-      - name: Azure CLI script - Create Resource Group
-        uses: azure/CLI@v1
-        with:
-          azcliversion: 2.30.0
-          inlineScript: |
-            az group create --name {${{ env.resourceGroup }} } --location {${{ env.region }}}
-
       - name: Deploy ARM Template
         id: deployarmtemplate
         uses: Azure/arm-deploy@v1
