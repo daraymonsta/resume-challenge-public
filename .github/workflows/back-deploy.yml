@@ -1,6 +1,6 @@
 # This validates the ARM templates, before uploading them to Azure as an artifact
 
-name: Validate + Deploy Back End ARM Templates CI
+name: Validate+Deploy Back End ARM Templates CI
 
 # Controls when the workflow will run
 on:
@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  region: uksouth
+  region: ukwest
   resourceGroup: CloudResumeChallengeV2
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -55,7 +55,7 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az group create --name {${{ env.resourceGroup }} } --location {${{ env.region }}}
+            az group create --name ${{ env.resourceGroup }} --location ${{ env.region }}
       
       - name: Validate ARM Template
         uses: Azure/arm-deploy@v1
