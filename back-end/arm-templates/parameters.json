@@ -9,13 +9,16 @@
             "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cosmos-db.json",
         },
         "cosmos_db_account_name": {
-            "value": "[concat('Resume', substring(uniqueString(resourceGroup().id),0,6))]"
+            "value": "cosmosDB698"
         },
         "cosmos_db_name": {
             "value": "ResumeDB"
         },
         "cosmos_db_container": {
             "value": "VisitorCount"
+        },
+        "randomId": {
+            "value": null
         }
     }
 }

@@ -16,6 +16,9 @@
         },
         "cosmos_db_container": {
             "type": "String"
+        },
+        "randomId": {
+            "type": "String"
         }
     },
     "functions": [],
@@ -36,7 +39,7 @@
                         "value": "[parameters('region')]"
                     },
                     "cosmos_db_account_name": {
-                        "value": "[parameters('cosmos_db_account_name')]"
+                        "value": "[concat(parameters('cosmos_db_account_name'), parameters('randomId'))]"
                     },
                     "cosmos_db_name": {
                         "value": "[parameters('cosmos_db_name')]"
@@ -44,6 +47,7 @@
                     "cosmos_db_container": {
                         "value": "[parameters('cosmos_db_container')]"
                     }
+
                 },
         
             }
