@@ -9,7 +9,7 @@
             "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cosmos-db.json",
         },
         "cosmos_db_account_name": {
-            "value": "sql_cosmos_db69882"
+            "value": "sqlcosmosdb69882"
         },
         "cosmos_db_name": {
             "value": "ResumeDB"
