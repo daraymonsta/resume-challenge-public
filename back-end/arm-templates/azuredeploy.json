@@ -5,16 +5,28 @@
         "template_uri_cosmos_db": {
             "type": "String"
         },
-        "region": {
+        "region_cosmos_db": {
             "type": "String"
         },
-        "cosmos_db_account_name": {
+        "cosmos_db_account_name_prefix": {
             "type": "String"
         },
         "cosmos_db_name": {
             "type": "String"
         },
         "cosmos_db_container": {
+            "type": "String"
+        },
+        "template_uri_func_app_storage": {
+            "type": "String"
+        },
+        "func_app_storage_name_prefix": {
+            "type": "string"
+        },
+        "template_uri_func_app": {
+            "type": "String"
+        },
+        "function_app_name_prefix": {
             "type": "String"
         }
     },
@@ -33,16 +45,62 @@
                 },
                 "parameters": {
                     "cosmos_db_location": {
-                        "value": "[parameters('region')]"
+                        "value": "[parameters('region_cosmos_db')]"
                     },
                     "cosmos_db_account_name": {
-                        "value": "[concat(parameters('cosmos_db_account_name'), substring(uniqueString(resourceGroup().id),0,6))]"
+                        "value": "[concat(parameters('cosmos_db_account_name_prefix'), substring(uniqueString(resourceGroup().id),0,6))]"
                     },
                     "cosmos_db_name": {
                         "value": "[parameters('cosmos_db_name')]"
                     },
                     "cosmos_db_container": {
                         "value": "[parameters('cosmos_db_container')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "linkTemplateFuncAppStorage",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('template_uri_func_app_storage')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "region": {
+                        "value": "[resourceGroup().location]"
+                    },
+                    "func_app_name": {
+                        "value": "[concat(parameters('function_app_name_prefix'), substring(uniqueString(resourceGroup().id),0,6))]"
+                    },
+                    "storage_account_name": {
+                        "value": "[concat(parameters('func_app_storage_name_prefix'), substring(uniqueString(resourceGroup().id),0,6))]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "linkTemplateFuncApp",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('template_uri_func_app')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "region": {
+                        "value": "[resourceGroup().location]"
+                    },
+                    "func_app_name": {
+                        "value": "[concat(parameters('function_app_name_prefix'), substring(uniqueString(resourceGroup().id),0,6))]"
+                    },
+                    "storage_account_name": {
+                        "value": "[concat(parameters('func_app_storage_name_prefix'), substring(uniqueString(resourceGroup().id),0,6))]"
                     }
                 }
             }
