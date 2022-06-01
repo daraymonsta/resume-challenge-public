@@ -17,7 +17,7 @@ on:
 
 env:
   region: ukwest
-  resourceGroup: CloudResumeChallengeV2
+  resourceGroup: CloudResumeChallengeTestV2
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -43,7 +43,7 @@ jobs:
         shell: bash
         continue-on-error: true
         run: |
-          echo "Results: ${{ steps.armttkvalidation.outputs.results }}"
+          echo "${{ toJSON(fromJSON(steps.armttkvalidation.outputs.results)) }}"
 
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
@@ -64,7 +64,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
           region: ${{ env.region }}
           resourceGroupName: ${{ env.resourceGroup }}
-          template: back-end/arm-templates/main-back-deploy.json
+          template: back-end/arm-templates/azuredeploy.json
           deploymentMode: Validate
           # parameters: back-end/arm-templates/parameters.json
       
@@ -102,7 +102,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
           region: ${{ env.region }}
           resourceGroupName: ${{ env.resourceGroup }}
-          template: main-back-deploy.json
+          template: azuredeploy.json
           deploymentMode: Incremental
           #parameters: back-end/arm-templates/parameters.json
 
