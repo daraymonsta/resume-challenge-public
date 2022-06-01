@@ -17,7 +17,7 @@ on:
 
 env:
   region: uksouth
-  resourceGroup: CloudResumeChallengeTestV2
+  resourceGroup: CloudResumeChallengeTestV3
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
