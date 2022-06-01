@@ -67,7 +67,7 @@ jobs:
           resourceGroupName: ${{ env.resourceGroup }}
           template: back-end/arm-templates/azuredeploy.json
           deploymentMode: Validate
-          parameters: back-end/arm-templates/parameters.json
+          parameters: back-end/arm-templates/parameters.json randomId=${{ env.randomId }}
       
       - name: Upload Template as Build Artifact
         uses: actions/upload-artifact@v2.2.2
