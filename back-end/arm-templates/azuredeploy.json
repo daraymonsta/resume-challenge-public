@@ -6,6 +6,7 @@
             "type": "String"
         },
         "region": {
+            "defaultValue": "southeastasia",
             "type": "String"
         },
         "cosmos_db_account_name": {
