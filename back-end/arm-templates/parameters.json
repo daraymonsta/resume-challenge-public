@@ -16,9 +16,6 @@
         },
         "cosmos_db_container": {
             "value": "VisitorCount"
-        },
-        "randomId": {
-            "value": null
         }
     }
 }
