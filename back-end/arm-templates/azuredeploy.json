@@ -36,7 +36,7 @@
                         "value": "[parameters('region')]"
                     },
                     "cosmos_db_account_name": {
-                        "value": "[parameters('cosmos_db_account_name')]"
+                        "value": "[concat(parameters('cosmos_db_account_name'), substring(uniqueString(resourceGroup().id),0,6))]"
                     },
                     "cosmos_db_name": {
                         "value": "[parameters('cosmos_db_name')]"
