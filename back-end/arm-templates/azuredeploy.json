@@ -47,9 +47,7 @@
                     "cosmos_db_container": {
                         "value": "[parameters('cosmos_db_container')]"
                     }
-
-                },
-        
+                }
             }
         }
     ],
