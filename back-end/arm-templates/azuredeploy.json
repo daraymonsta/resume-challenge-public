@@ -18,6 +18,7 @@
             "type": "String"
         },
         "randomId": {
+            "defaultValue": "444",
             "type": "String"
         }
     },
