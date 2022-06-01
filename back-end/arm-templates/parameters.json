@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "region": {
+            "value": "southeastasia"
+        },
+        "template_uri_cosmos_db": {
+            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cosmos-db.json",
+        },
+        "cosmos_db_account_name": {
+            "value": "[concat('Resume', substring(uniqueString(resourceGroup().id),0,6))]"
+        },
+        "cosmos_db_name": {
+            "value": "ResumeDB"
+        },
+        "cosmos_db_container": {
+            "value": "VisitorCount"
+        }
+    }
+}

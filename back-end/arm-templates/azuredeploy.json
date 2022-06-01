@@ -3,12 +3,19 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "template_uri_cosmos_db": {
-            "defaultValue": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cosmos-db.json",
-            "type": "string"
+            "type": "String"
         },
         "region": {
-            "defaultValue": "uksouth",
-            "type": "string"
+            "type": "String"
+        },
+        "cosmos_db_account_name": {
+            "type": "String"
+        },
+        "cosmos_db_name": {
+            "type": "String"
+        },
+        "cosmos_db_container": {
+            "type": "String"
         }
     },
     "functions": [],
@@ -27,8 +34,18 @@
                 "parameters": {
                     "cosmos_db_location": {
                         "value": "[parameters('region')]"
+                    },
+                    "cosmos_db_account_name": {
+                        "value": "[parameters('cosmos_db_account_name')]"
+                    },
+                    "cosmos_db_name": {
+                        "value": "[parameters('cosmos_db_name')]"
+                    },
+                    "cosmos_db_container": {
+                        "value": "[parameters('cosmos_db_container')]"
                     }
-                }
+                },
+        
             }
         }
     ],
