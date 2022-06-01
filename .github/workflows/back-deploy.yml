@@ -104,7 +104,7 @@ jobs:
           resourceGroupName: ${{ env.resourceGroup }}
           template: azuredeploy.json
           deploymentMode: Incremental
-          parameters: back-end/arm-templates/parameters.json
+          parameters: parameters.json
 
       # Azure logout
       - name: logout
