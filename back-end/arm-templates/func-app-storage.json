@@ -3,11 +3,14 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "storage_account_name": {
-            "defaultValue": "resumestorage002",
+            "defaultValue": "resumestorage003",
             "type": "String"
         },
         "region": {
             "defaultValue": "uksouth",
+            "type": "string"
+        },
+        "func_app_name": {
             "type": "string"
         }
     },
@@ -204,7 +207,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
             "apiVersion": "2021-09-01",
-            "name": "[concat(parameters('storage_account_name'), '/default/az-func-visitor-api28ee2')]",
+            "name": "[concat(parameters('storage_account_name'), '/default/', parameters('func_app_name'), 'share')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storage_account_name'), 'default')]",
                 "[resourceId('Microsoft.Storage/storageAccounts', parameters('storage_account_name'))]"

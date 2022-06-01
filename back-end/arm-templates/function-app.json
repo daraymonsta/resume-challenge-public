@@ -11,6 +11,7 @@
             "type": "string"
         },
         "storage_account_name": {
+            "defaultValue": "resumestorage003",
             "type": "string"
         }
     },

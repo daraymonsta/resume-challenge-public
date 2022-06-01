@@ -31,7 +31,9 @@
         }
     },
     "functions": [],
-    "variables": {},
+    "variables": {
+        "exampleVar": "from azuredeploy.json template!"
+    },
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
@@ -107,6 +109,9 @@
         }
     ],
     "outputs": {
-
+        "result": {
+            "type": "string",
+            "value": "[variables('exampleVar')]"
+        }
     }
 }
