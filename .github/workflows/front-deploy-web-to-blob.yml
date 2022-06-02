@@ -25,6 +25,18 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+      - name: JSON to env variables
+        uses: antifree/json-to-variables@v1.0.1
+        with:
+          filename: './back-end/arm-templates/azuredeploy.parameters.json'
+          prefix: test
+      - name: Show output
+        run: |
+          echo "The resource group is ${{ env.test_parameters_resource_group_value }}"
+          echo "The storage account name is ${{ env.test_parameters_storage_account_name_value }}"
+          echo "The cdn profile name is ${{ env.test_parameters_cdn_profile_name_value }}"
+          echo "The cdn endpoint name is ${{ env.test_parameters_cdn_endpoint_name_value }}"
+
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
         with:
@@ -34,13 +46,13 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob upload-batch --account-name resumestorage002 --auth-mode key -d '$web' -s front-end/. --overwrite
+            az storage blob upload-batch --account-name ${{ env.test_parameters_storage_account_name_value }} --auth-mode key -d '$web' -s front-end/. --overwrite
       
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az cdn endpoint purge --content-paths "/*" --profile-name "resumecdn002" --name "rossi" --resource-group "CloudResumeChallenge"
+            az cdn endpoint purge --content-paths "/*" --profile-name "${{ env.test_parameters_cdn_profile_name_value }}" --name "${{ env.test_parameters_cdn_endpoint_name_value }}" --resource-group "${{ env.test_parameters_resource_group_value }}"
 
       # Azure logout
       - name: logout
