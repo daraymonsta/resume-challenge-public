@@ -35,7 +35,7 @@ jobs:
       - name: Show output
         run: |
           echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
-          echo "The region is ${{ env.fromjson_parameters_resource_region_value }}"
+          echo "The region is ${{ env.fromjson_parameters_region_value }}"
           echo "The storage account name is ${{ env.fromjson_parameters_storage_account_name_value }}"
           echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
       
@@ -63,14 +63,14 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az group create --name ${{ env.fromjson_parameters_resource_group_value }} --location ${{ env.fromjson_parameters_resource_region_value }}
+            az group create --name ${{ env.fromjson_parameters_resource_group_value }} --location ${{ env.fromjson_parameters_region_value }}
       
       - name: Validate ARM Template
         uses: Azure/arm-deploy@v1
         with:
           scope: resourcegroup
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
-          region: ${{ env.fromjson_parameters_resource_region_value }}
+          region: ${{ env.fromjson_parameters_region_value }}
           resourceGroupName: ${{ env.fromjson_parameters_resource_group_value }}
           template: back-end/arm-templates/azuredeploy.json
           deploymentMode: Validate
@@ -108,7 +108,7 @@ jobs:
         with:
           scope: resourcegroup
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
-          region: ${{ env.fromjson_parameters_resource_region_value }}
+          region: ${{ env.fromjson_parameters_region_value }}
           resourceGroupName: ${{ env.fromjson_parameters_resource_group_value }}
           template: azuredeploy.json
           deploymentMode: Incremental
