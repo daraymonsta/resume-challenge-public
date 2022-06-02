@@ -6,7 +6,7 @@
             "defaultValue": "resumestorage002",
             "type": "String"
         },
-        "resource_location": {
+        "region": {
             "defaultValue": "uksouth",
             "type": "string"
         }
@@ -17,7 +17,7 @@
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2021-09-01",
             "name": "[parameters('storage_account_name')]",
-            "location": "[parameters('resource_location')]",
+            "location": "[parameters('region')]",
             "sku": {
                 "name": "Standard_LRS",
                 "tier": "Standard"

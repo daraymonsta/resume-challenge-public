@@ -16,8 +16,11 @@
         "cosmos_db_container": {
             "type": "String"
         },
-        "template_uri_storage": {
+        "template_uri_func_app_storage": {
             "type": "String"
+        },
+        "func_app_storage_name_prefix": {
+            "type": "string"
         },
         "template_uri_func_app": {
             "type": "String"
@@ -66,11 +69,34 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2021-04-01",
-            "name": "linkTemplateStorage",
+            "name": "linkTemplateFuncAppStorage",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[parameters('template_uri_storage')]",
+                    "uri": "[parameters('template_uri_func_app_storage')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "region": {
+                        "value": "[resourceGroup().location]"
+                    },
+                    "func_app_name": {
+                        "value": "[concat(parameters('function_app_name'), substring(uniqueString(resourceGroup().id),0,6))]"
+                    },
+                    "storage_account_name": {
+                        "value": "[concat(parameters('func_app_storage_name_prefix'), substring(uniqueString(resourceGroup().id),0,6))]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "linkTemplateFuncApp",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('template_uri_func_app')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {

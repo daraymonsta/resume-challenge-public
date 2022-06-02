@@ -15,7 +15,7 @@
             "type": "String"
         },
         "cosmos_db_location": {
-            "defaultValue": "UK West",
+            "defaultValue": "ukwest",
             "type": "String"
         }
     },
