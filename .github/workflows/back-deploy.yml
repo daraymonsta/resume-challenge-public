@@ -32,6 +32,7 @@ jobs:
         with:
           filename: './back-end/arm-templates/azuredeploy.parameters.json'
           prefix: fromjson
+          
       - name: Show output
         run: |
           echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
@@ -91,10 +92,13 @@ jobs:
     needs: [validation]
     runs-on: ubuntu-latest
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      
       - name: JSON to variables
         uses: antifree/json-to-variables@v1.0.1
         with:
-          filename: 'azuredeploy.parameters.json'
+          filename: './back-end/arm-templates/azuredeploy.parameters.json'
           prefix: fromjson
           
       - name: Show output
