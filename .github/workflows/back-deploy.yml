@@ -15,10 +15,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-env:
-  region: uksouth
-  resourceGroup: CloudResumeChallengeTestV3
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # first job called "validation"
@@ -30,6 +26,18 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+      
+      - name: JSON to variables
+        uses: antifree/json-to-variables@v1.0.1
+        with:
+          filename: './back-end/arm-templates/azuredeploy.parameters.json'
+          prefix: fromjson
+      - name: Show output
+        run: |
+          echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
+          echo "The region is ${{ env.fromjson_parameters_resource_region_value }}"
+          echo "The storage account name is ${{ env.fromjson_parameters_storage_account_name_value }}"
+          echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
       
       # Functional verification of ARM templates without connecting to Azure
       - name: ARM Template Toolkit (ARM TTK) Validation
@@ -55,18 +63,18 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az group create --name ${{ env.resourceGroup }} --location ${{ env.region }}
+            az group create --name ${{ env.fromjson_parameters_resource_group_value }} --location ${{ env.fromjson_parameters_resource_region_value }}
       
       - name: Validate ARM Template
         uses: Azure/arm-deploy@v1
         with:
           scope: resourcegroup
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
-          region: ${{ env.region }}
-          resourceGroupName: ${{ env.resourceGroup }}
+          region: ${{ env.fromjson_parameters_resource_region_value }}
+          resourceGroupName: ${{ env.fromjson_parameters_resource_group_value }}
           template: back-end/arm-templates/azuredeploy.json
           deploymentMode: Validate
-          parameters: back-end/arm-templates/parameters.json
+          parameters: back-end/arm-templates/azuredeploy.parameters.json
       
       - name: Upload Template as Build Artifact
         uses: actions/upload-artifact@v2.2.2
@@ -100,11 +108,11 @@ jobs:
         with:
           scope: resourcegroup
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
-          region: ${{ env.region }}
-          resourceGroupName: ${{ env.resourceGroup }}
+          region: ${{ env.fromjson_parameters_resource_region_value }}
+          resourceGroupName: ${{ env.fromjson_parameters_resource_group_value }}
           template: azuredeploy.json
           deploymentMode: Incremental
-          parameters: parameters.json
+          parameters: azuredeploy.parameters.json
 
       # Azure logout
       - name: logout
