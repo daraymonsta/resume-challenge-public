@@ -3,13 +3,17 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "resource_group": {
-            "value": "RG9981"
+            "value": "CloudResumeChallenge"
         },
         "storage_account_name": {
-            "value": "teststorageaccount9981"
+            "value": "resumestorage002"
         },
         "cdn_profile_name": {
-            "value": "cdnprofile9981"
+            "value": "resumecdn002"
+        },
+        "cdn_endpoint_name": {
+            "value": "rossi"
         }
+
     }
 }
