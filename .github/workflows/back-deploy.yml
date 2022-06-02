@@ -5,12 +5,12 @@ name: Validate+Deploy Back End ARM Templates CI
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for changes to the "back-end/arm-templates" folder of the main branch
-  #push:
-  #  branches: [ main ]
-  #  paths: back-end/arm-templates/**
-  #pull_request:
-  #  branches: [ main ]
-  #  paths: back-end/arm-templates/**
+  push:
+    branches: [ main ]
+    paths: back-end/arm-templates/**
+  pull_request:
+    branches: [ main ]
+    paths: back-end/arm-templates/**
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -86,7 +86,7 @@ jobs:
 
   # second job called "PROD" deploys backend infrastructure using build artifact already validated + uploaded to Azure
   PROD:
-    name: Deploy Back End to PROD CI
+    name: Deploy Back-end CI
     if: github.event.ref == 'refs/heads/main'
     needs: [validation]
     runs-on: ubuntu-latest
