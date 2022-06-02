@@ -32,7 +32,7 @@ jobs:
       - name: JSON to variables
         uses: antifree/json-to-variables@v1.0.1
         with:
-          filename: '/back-end/arm-templates/azuredeploy.parameters.json'
+          filename: './back-end/arm-templates/azuredeploy.parameters.json'
           prefix: test
       - name: Show output
         run: |
