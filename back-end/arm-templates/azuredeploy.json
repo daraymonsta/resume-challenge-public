@@ -1,35 +1,51 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",    "parameters": {
+    "contentVersion": "1.0.0.0",    
+    "parameters": {
+        "region": {
+            "type": "string"
+        },
+        "resource_group": {
+            "type": "string"
+        },
         "template_uri_cosmos_db": {
-            "type": "String"
-        },
-        "cosmos_db_location": {
-            "type": "String"
-        },
-        "cosmos_db_account_name": {
-            "type": "String"
-        },
-        "cosmos_db_name": {
-            "type": "String"
-        },
-        "cosmos_db_container": {
-            "type": "String"
+            "type": "string"
         },
         "template_uri_storage": {
-            "type": "String"
+            "type": "string"
         },
         "template_uri_func_app": {
-            "type": "String"
+            "type": "string"
         },
-        "function_app_name": {
-            "type": "String"
+        "template_uri_cdn_profile": {
+            "type": "string"
+        },
+        "template_uri_dns-zone": {
+            "type": "string"
         },
         "storage_account_name": {
-            "type": "String"
+            "type": "string"
         },
-        "region": {
-            "type": "String"
+        "cdn_profile_name": {
+            "type": "string"
+        },
+        "cdn_endpoint_name": {
+            "type": "string"
+        },
+        "cosmos_db_account_name": {
+            "type": "string"
+        },
+        "cosmos_db_name": {
+            "type": "string"
+        },
+        "cosmos_db_container": {
+            "type": "string"
+        },
+        "cosmos_db_location": {
+            "type": "string"
+        },
+        "function_app_name": {
+            "type": "string"
         }
     },
     "functions": [],
