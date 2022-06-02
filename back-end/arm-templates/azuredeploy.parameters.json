@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resource_group": {
+            "value": "RG9981"
+        },
+        "storage_account_name": {
+            "value": "teststorageaccount9981"
+        },
+        "cdn_profile_name": {
+            "value": "cdnprofile9981"
+        }
+    }
+}
