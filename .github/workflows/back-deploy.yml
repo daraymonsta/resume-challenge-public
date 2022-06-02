@@ -91,6 +91,13 @@ jobs:
     needs: [validation]
     runs-on: ubuntu-latest
     steps:
+    
+      - name: Show output
+        run: |
+          echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
+          echo "The region is ${{ env.fromjson_parameters_region_value }}"
+          echo "The storage account name is ${{ env.fromjson_parameters_storage_account_name_value }}"
+          echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
 
       - name: Download a Build Artifact
         uses: actions/download-artifact@v2.0.8
