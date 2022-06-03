@@ -1,4 +1,4 @@
-name: Deploy Website to Blob Storage CI
+name: Deploy Website to Blob CI
 
 # Controls when the workflow will run
 on:
