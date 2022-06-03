@@ -29,13 +29,13 @@ jobs:
         uses: antifree/json-to-variables@v1.0.1
         with:
           filename: './back-end/arm-templates/azuredeploy.parameters.json'
-          prefix: test
+          prefix: fromjson
       - name: Show output
         run: |
-          echo "The resource group is ${{ env.test_parameters_resource_group_value }}"
-          echo "The storage account name is ${{ env.test_parameters_storage_account_name_value }}"
-          echo "The cdn profile name is ${{ env.test_parameters_cdn_profile_name_value }}"
-          echo "The cdn endpoint name is ${{ env.test_parameters_cdn_endpoint_name_value }}"
+          echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
+          echo "The storage account name is ${{ env.fromjson_parameters_storage_account_name_value }}"
+          echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
+          echo "The cdn endpoint name is ${{ env.fromjson_parameters_cdn_endpoint_name_value }}"
 
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
@@ -46,13 +46,13 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob upload-batch --account-name ${{ env.test_parameters_storage_account_name_value }} --auth-mode key -d '$web' -s front-end/. --overwrite
+            az storage blob upload-batch --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode key -d '$web' -s front-end/. --overwrite
       
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az cdn endpoint purge --content-paths "/*" --profile-name "${{ env.test_parameters_cdn_profile_name_value }}" --name "${{ env.test_parameters_cdn_endpoint_name_value }}" --resource-group "${{ env.test_parameters_resource_group_value }}"
+            az cdn endpoint purge --content-paths "/*" --profile-name "${{ env.fromjson_parameters_cdn_profile_name_value }}" --name "${{ env.fromjson_parameters_cdn_endpoint_name_value }}" --resource-group "${{ env.fromjson_parameters_resource_group_value }}"
 
       # Azure logout
       - name: logout
