@@ -56,10 +56,7 @@
         "linuxFxVersion": {
             "type": "string"
         },
-        "deploy_package_url": {
-            "type": "string"
-        },
-        "deploy_package_sas_token": {
+        "packageUri": {
             "type": "string"
         }
     },
@@ -150,7 +147,7 @@
                         "value": "[parameters('linuxFxVersion')]"
                     },
                     "packageUri": {
-                        "value": "[concat(parameters('deploy_package_url'), '?', parameters('deploy_package_sas_token'))]"
+                        "value": "[parameters('packageUri')]"
                     }
                 }
             }

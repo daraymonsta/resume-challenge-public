@@ -56,11 +56,8 @@
         "linuxFxVersion": {
             "value": "python|3.9"
         },
-        "deploy_package_url": {
-            "value": null
-        },
-        "deploy_package_sas_token": {
-            "value": null
+        "packageUri": {
+            "value": "https://github.com/daraymonsta/resume-challenge-public/blob/main/back-end/backend.zip?raw=true"
         }
     }
 }
