@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Test SAS Generation
 
 # Controls when the workflow will run
 on:
@@ -61,7 +61,7 @@ jobs:
       - name: Get Connection String
         id: connectionstr
         run: |
-          h=$(az storage account show-connection-string ${{ env.fromjson_parameters_resource_group_value }} --name ${{ env.fromjson_parameters_storage_account_name_value }})
+          h=$(az storage account show-connection-string -g ${{ env.fromjson_parameters_resource_group_value }} --name ${{ env.fromjson_parameters_storage_account_name_value }})
             
           echo "::set-output name=h::$h"
           
