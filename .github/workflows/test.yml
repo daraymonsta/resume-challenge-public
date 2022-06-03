@@ -33,12 +33,12 @@ jobs:
         uses: antifree/json-to-variables@v1.0.1
         with:
           filename: './back-end/arm-templates/azuredeploy.parameters.json'
-          prefix: test
+          prefix: fromjson
       - name: Show output
         run: |
-          echo "The ${{ env.test_parameters_0 }} is ${{ env.test_parameters_resource_group_value }}"
-          echo "The ${{ env.test_parameters_1 }} is ${{ env.test_parameters_storage_account_name_value }}"
-          echo "The ${{ env.test_parameters_2 }} is ${{ env.test_parameters_cdn_profile_name_value }}"
+          echo "The ${{ env.test_parameters_0 }} is ${{ env.fromjson_parameters_resource_group_value }}"
+          echo "The ${{ env.test_parameters_1 }} is ${{ env.fromjson_parameters_storage_account_name_value }}"
+          echo "The ${{ env.test_parameters_2 }} is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
 
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
