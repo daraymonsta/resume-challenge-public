@@ -46,6 +46,21 @@
         },
         "function_app_name": {
             "value": "funcvisitorapi88"
+        },
+        "storageAccountType": {
+            "value": "Standard_LRS"
+        },
+        "functionWorkerRuntime": {
+            "value": "python"
+        },
+        "linuxFxVersion": {
+            "value": "python|3.9"
+        },
+        "deploy_package_url": {
+            "value": null
+        },
+        "deploy_package_sas_token": {
+            "value": null
         }
     }
 }

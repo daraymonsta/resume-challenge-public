@@ -46,6 +46,21 @@
         },
         "function_app_name": {
             "type": "string"
+        },
+        "storageAccountType": {
+            "type": "string"
+        },
+        "functionWorkerRuntime": {
+            "type": "string"
+        },
+        "linuxFxVersion": {
+            "type": "string"
+        },
+        "deploy_package_url": {
+            "type": "string"
+        },
+        "deploy_package_sas_token": {
+            "type": "string"
         }
     },
     "functions": [],
@@ -98,6 +113,44 @@
                     },
                     "storage_account_name": {
                         "value": "[parameters('storage_account_name')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "linkTemplateStorage",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('template_uri_func_app')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "region": {
+                        "value": "[parameters('region')]"
+                    },
+                    "function_app_name": {
+                        "value": "[parameters('function_app_name')]"
+                    },
+                    "storage_account_name": {
+                        "value": "[parameters('storage_account_name')]"
+                    },
+                    "storageAccountType": {
+                        "value": "[parameters('storageAccountType')]"
+                    },
+                    "appInsightsLocation": {
+                        "value": "[parameters('region')]"
+                    },
+                    "functionWorkerRuntime": {
+                        "value": "[parameters('functionWorkerRuntime')]"
+                    },
+                    "linuxFxVersion": {
+                        "value": "[parameters('linuxFxVersion')]"
+                    },
+                    "packageUri": {
+                        "value": "[concat(parameters('deploy_package_url'), '?', parameters('deploy_package_sas_token'))]"
                     }
                 }
             }

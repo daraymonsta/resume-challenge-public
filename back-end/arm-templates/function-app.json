@@ -2,11 +2,18 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "functionAppName": {
+      "function_app_name": {
         "type": "string",
         "defaultValue": "[format('func-{0}', uniqueString(resourceGroup().id))]",
         "metadata": {
           "description": "The name of the Azure Function app."
+        }
+      },
+      "storage_account_name": {
+        "type": "string",
+        "defaultValue": "[concat(uniquestring(resourceGroup().id), 'azfunctions')]",
+        "metadata": {
+          "description": "Storage Account name"
         }
       },
       "storageAccountType": {
@@ -21,7 +28,7 @@
           "description": "Storage Account type"
         }
       },
-      "location": {
+      "region": {
         "type": "string",
         "defaultValue": "[resourceGroup().location]",
         "metadata": {
@@ -63,16 +70,16 @@
       }
     },
     "variables": {
-      "hostingPlanName": "[parameters('functionAppName')]",
-      "applicationInsightsName": "[parameters('functionAppName')]",
-      "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'azfunctions')]"
+      "hostingPlanName": "[parameters('function_app_name')]",
+      "applicationInsightsName": "[parameters('function_app_name')]",
+      "storageAccountName": "[parameters('storage_account_name')]"
     },
     "resources": [
       {
         "type": "Microsoft.Storage/storageAccounts",
         "apiVersion": "2021-02-01",
         "name": "[variables('storageAccountName')]",
-        "location": "[parameters('location')]",
+        "location": "[parameters('region')]",
         "sku": {
           "name": "[parameters('storageAccountType')]"
         },
@@ -82,7 +89,7 @@
         "type": "Microsoft.Web/serverfarms",
         "apiVersion": "2021-02-01",
         "name": "[variables('hostingPlanName')]",
-        "location": "[parameters('location')]",
+        "location": "[parameters('region')]",
         "sku": {
           "name": "Y1",
           "tier": "Dynamic",
@@ -110,8 +117,8 @@
       {
         "type": "Microsoft.Web/sites",
         "apiVersion": "2021-02-01",
-        "name": "[parameters('functionAppName')]",
-        "location": "[parameters('location')]",
+        "name": "[parameters('function_app_name')]",
+        "location": "[parameters('region')]",
         "kind": "functionapp,linux",
         "dependsOn": [
           "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
@@ -126,7 +133,7 @@
             "appSettings": [
               {
                 "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                "value": "[reference(resourceId('Microsoft.Insights/components', parameters('functionAppName')), '2015-05-01').InstrumentationKey]"
+                "value": "[reference(resourceId('Microsoft.Insights/components', parameters('function_app_name')), '2015-05-01').InstrumentationKey]"
               },
               {
                 "name": "AzureWebJobsStorage",
