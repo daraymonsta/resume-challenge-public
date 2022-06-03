@@ -54,7 +54,7 @@ jobs:
         with:
           inlineScript: |
             az storage container create --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode login -n github-actions-deploy
-            az storage blob upload --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode login -d 'github-actions-deploy' -s backend.zip --overwrite
+            az storage blob upload --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode login -c 'github-actions-deploy' -f backend.zip --overwrite
 
       # Azure logout
       - name: logout
