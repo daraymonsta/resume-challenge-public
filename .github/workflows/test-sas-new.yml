@@ -67,7 +67,7 @@ jobs:
           
       - name: Output Connection String
         run: |
-          echo ${{ steps.connectionstr.outputs.h }}
+          echo "${{ steps.connectionstr.outputs.h }}"
             
       - name: Generate Container SAS Token
         id: gettoken
@@ -78,7 +78,7 @@ jobs:
       
       - name: Output SAS Token
         run: |
-          echo ${{ steps.gettoken.outputs.h }}
+          echo "${{ steps.gettoken.outputs.h }}"
       
       - name: Get Blob URL
         id: getbloburl
@@ -89,7 +89,7 @@ jobs:
       
       - name: Output Blob URL
         run: |
-          echo ${{ steps.getbloburl.outputs.h }}
+          echo "${{ steps.getbloburl.outputs.h }}"
       
       # Azure logout
       - name: logout
