@@ -41,6 +41,7 @@ jobs:
       - name: "Create ZIP"
         run: |
           Get-ChildItem .\back-end\func-app-visitor-api | Compress-Archive -Destination .\backend.zip
+          ls
         shell: pwsh
 
       # Logs into Azure with GitHub secret
