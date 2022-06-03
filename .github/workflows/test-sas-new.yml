@@ -62,14 +62,13 @@ jobs:
         id: connectionstr
         run: |
           h=$(az storage account show-connection-string -g ${{ env.fromjson_parameters_resource_group_value }} --name ${{ env.fromjson_parameters_storage_account_name_value }})
-          echo $h
-          echo "${{ fromJSON($h) }}"
+
           echo "::set-output name=h::$h"
           
           
       - name: Output Connection String
         run: |
-          echo "${{ steps.connectionstr.outputs.h }}"
+          echo "${{ toJSON(fromJSON(steps.connectionstr.outputs.h)) }}"
             
       - name: Generate Container SAS Token
         id: gettoken
