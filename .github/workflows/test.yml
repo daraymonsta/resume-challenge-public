@@ -50,7 +50,7 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob generate-sas --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode login --container-name github-actions-deploy --name backend.zip --permissions r --expiry 2022-06-04
+            az storage blob generate-sas --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode login --container-name github-actions-deploy --name backend.zip --permissions r --expiry 2022-06-04 --as-user
       
       - name: Output SAS Token
         run: |
