@@ -1,0 +1,137 @@
+# This validates the ARM templates, before uploading them to Azure as an artifact
+
+name: Backup-Deploy Back End ARM CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for changes to the "back-end/arm-templates" folder of the main branch
+  #push:
+  #  branches: [ main ]
+  #  paths: back-end/arm-templates/**
+  #pull_request:
+  #  branches: [ main ]
+  #  paths: back-end/arm-templates/**
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # first job called "validation"
+  validation:
+    name: ARM Template Validations
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      
+      - name: JSON to variables
+        uses: antifree/json-to-variables@v1.0.1
+        with:
+          filename: './back-end/arm-templates/azuredeploy.parameters.json'
+          prefix: fromjson
+          
+      - name: Show output
+        run: |
+          echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
+          echo "The region is ${{ env.fromjson_parameters_region_value }}"
+          echo "The storage account name is ${{ env.fromjson_parameters_storage_account_name_value }}"
+          echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
+      
+      # Functional verification of ARM templates without connecting to Azure
+      - name: ARM Template Toolkit (ARM TTK) Validation
+        id: armttkvalidation
+        uses: aliencube/arm-ttk-actions@v0.3
+        with:
+          path: ./back-end/arm-templates
+          skips: '"apiVersions Should Be Recent"'
+          
+      - name: Display Test Result
+        shell: bash
+        continue-on-error: true
+        run: |
+          echo "${{ toJSON(fromJSON(steps.armttkvalidation.outputs.results)) }}"
+
+      # Logs into Azure with GitHub secret
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
+          
+      - name: Azure CLI script - Create Resource Group
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az group create --name ${{ env.fromjson_parameters_resource_group_value }} --location ${{ env.fromjson_parameters_region_value }}
+      
+      - name: Validate ARM Template
+        uses: Azure/arm-deploy@v1
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
+          region: ${{ env.fromjson_parameters_region_value }}
+          resourceGroupName: ${{ env.fromjson_parameters_resource_group_value }}
+          template: back-end/arm-templates/azuredeploy.json
+          deploymentMode: Validate
+          parameters: back-end/arm-templates/azuredeploy.parameters.json
+      
+      - name: Upload Template as Build Artifact
+        uses: actions/upload-artifact@v2.2.2
+        with:
+          name: ResumeBackendTemplate
+          # A file, directory or wildcard pattern that describes what to upload
+          path: back-end/arm-templates/*
+          if-no-files-found: error
+
+  # second job called "PROD" deploys backend infrastructure using build artifact already validated + uploaded to Azure
+  PROD:
+    name: Deploy Back-end CI
+    if: github.event.ref == 'refs/heads/main'
+    needs: [validation]
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      
+      - name: JSON to variables
+        uses: antifree/json-to-variables@v1.0.1
+        with:
+          filename: './back-end/arm-templates/azuredeploy.parameters.json'
+          prefix: fromjson
+          
+      - name: Show output
+        run: |
+          echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
+          echo "The region is ${{ env.fromjson_parameters_region_value }}"
+          echo "The storage account name is ${{ env.fromjson_parameters_storage_account_name_value }}"
+          echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
+
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.0.8
+        with:
+          name: ResumeBackendTemplate
+
+      # Logs into Azure with GitHub secret
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
+          
+      - name: Deploy ARM Template
+        id: deployarmtemplate
+        uses: Azure/arm-deploy@v1
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
+          region: ${{ env.fromjson_parameters_region_value }}
+          resourceGroupName: ${{ env.fromjson_parameters_resource_group_value }}
+          template: azuredeploy.json
+          deploymentMode: Incremental
+          parameters: azuredeploy.parameters.json
+
+      # Azure logout
+      - name: logout
+        run: |
+            az logout
+        if: always()
