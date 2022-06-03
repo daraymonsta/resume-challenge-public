@@ -1,6 +1,6 @@
 # This validates the ARM templates, before uploading them to Azure as an artifact
 
-name: Validate+Deploy Back End ARM Templates CI
+name: Deploy Back End ARM CI
 
 # Controls when the workflow will run
 on:
