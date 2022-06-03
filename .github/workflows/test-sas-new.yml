@@ -1,0 +1,104 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  #push:
+  #  branches: [ main ]
+  #pull_request:
+  #  branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      - name: JSON to variables
+        uses: antifree/json-to-variables@v1.0.1
+        with:
+          filename: './back-end/arm-templates/azuredeploy.parameters.json'
+          prefix: fromjson
+      - name: Show output
+        run: |
+          echo "The ${{ env.test_parameters_0 }} is ${{ env.fromjson_parameters_resource_group_value }}"
+          echo "The ${{ env.test_parameters_1 }} is ${{ env.fromjson_parameters_storage_account_name_value }}"
+          echo "The ${{ env.test_parameters_2 }} is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
+
+      # Logs into Azure with GitHub secret
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_CREATEBLOB }}
+      
+      - name: Get Azure version
+        id: test1
+        run: |
+          h=$(az --version)
+
+          echo "::set-output name=h::$h"
+
+      - name: Output Azure version
+        run: |
+          echo "${{ steps.test1.outputs.h }}"
+      
+      - name: Get Connection String
+        id: connectionstr
+        run: |
+          h=$(az storage account show-connection-string ${{ env.fromjson_parameters_resource_group_value }} --name ${{ env.fromjson_parameters_storage_account_name_value }})
+            
+          echo "::set-output name=h::$h"
+          
+      - name: Output Connection String
+        run: |
+          echo ${{ steps.connectionstr.outputs.h }}
+            
+      - name: Generate Container SAS Token
+        id: gettoken
+        run: |
+          h=$(az storage container generate-sas --name github-actions-deploy --permissions r --expiry 2022-06-04 --output tsv --connection-string ${{ steps.connectionstr.outputs.h }})
+          
+          echo "::set-output name=h::$h"
+      
+      - name: Output SAS Token
+        run: |
+          echo ${{ steps.gettoken.outputs.h }}
+      
+      - name: Get Blob URL
+        id: getbloburl
+        run: |
+          h=$(az storage blob url --container-name github-actions-deploy  --name backend.zip --output tsv --connection-string ${{ steps.connectionstr.outputs.h }})
+          
+          echo "::set-output name=h::$h"
+      
+      - name: Output Blob URL
+        run: |
+          echo ${{ steps.getbloburl.outputs.h }}
+      
+      # Azure logout
+      - name: logout
+        run: |
+            az logout
+        if: always()
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo This is the end of the script
+          echo *****************************
