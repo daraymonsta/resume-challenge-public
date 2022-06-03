@@ -37,17 +37,6 @@ jobs:
           echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
           echo "The cdn endpoint name is ${{ env.fromjson_parameters_cdn_endpoint_name_value }}"
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-          registry-url: https://registry.npmjs.org/
-
-      - name: "Install and build"
-        run: |
-          npm ci
-          npm run build
-          npm prune --production
-
       # You can also make use of a ZIP GitHub Action
       - name: "Create ZIP"
         run: |
