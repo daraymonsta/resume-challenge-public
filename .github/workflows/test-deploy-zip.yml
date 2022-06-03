@@ -52,8 +52,8 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage container create --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode key -n github-actions-deploy
-            az storage blob upload-batch --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode key -d 'github-actions-deploy' -s ./backend.zip --overwrite
+            az storage container create --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode login -n github-actions-deploy
+            az storage blob upload-batch --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode login -d 'github-actions-deploy' -s ./backend.zip --overwrite
 
       # Azure logout
       - name: logout
