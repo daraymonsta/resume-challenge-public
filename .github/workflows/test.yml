@@ -40,6 +40,34 @@ jobs:
           echo "The ${{ env.test_parameters_1 }} is ${{ env.test_parameters_storage_account_name_value }}"
           echo "The ${{ env.test_parameters_2 }} is ${{ env.test_parameters_cdn_profile_name_value }}"
 
+      # Logs into Azure with GitHub secret
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_CREATEBLOB }}
+      
+      - name: Generate SAS Token
+        id: generatesastoken
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob generate-sas
+            --account-name ${{ env.fromjson_parameters_storage_account_name_value }}
+            --auth-mode login
+            --container-name github-actions-deploy
+            --name backend.zip
+            --permissions r
+            --expiry `date -u -d "30 minutes" '+%Y-%m-%dT%H:%MZ'`
+      
+      - name: Output SAS Token
+        run: |
+          echo ${{ steps.generatesastoken.outputs.* }}
+      
+      # Azure logout
+      - name: logout
+        run: |
+            az logout
+        if: always()
+
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
