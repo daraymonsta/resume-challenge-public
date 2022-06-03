@@ -89,7 +89,7 @@ jobs:
           
       - name: Output Connection String
         run: |
-          echo "${{ toJSON(fromJSON(steps.connectionstr.outputs.h)) }}"
+          echo "${{ toJSON(fromJSON(steps.connectionstr.outputs.content)) }}"
             
       - name: Generate Container SAS Token
         id: gettoken
