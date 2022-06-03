@@ -45,7 +45,7 @@ jobs:
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS_CREATEBLOB }}
+          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
       
       - name: Get Azure version
         id: test1
