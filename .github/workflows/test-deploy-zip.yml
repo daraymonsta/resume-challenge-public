@@ -47,7 +47,7 @@ jobs:
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS_CREATEBLOB }}
       
       - name: Upload to blob storage
         uses: azure/CLI@v1
