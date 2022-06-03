@@ -68,7 +68,7 @@ jobs:
       
       - name: Output SAS Token
         run: |
-          echo ${{ steps.generatesastoken.output.h }}
+          echo ${{ steps.generatesastoken.outputs.h }}
       
       # Azure logout
       - name: logout
