@@ -108,7 +108,7 @@ jobs:
       - name: Get Blob URL
         id: getbloburl
         run: |
-          h=$(az storage blob url --container-name github-actions-deploy  --name backend.zip --output tsv --connection-string ${{ steps.connectionstr.outputs.h }})
+          h=$(az storage blob url --container-name github-actions-deploy  --name backend.zip --output tsv --connection-string ${{ steps.connectionstr.outputs.value }})
           
           echo "::set-output name=h::$h"
       
