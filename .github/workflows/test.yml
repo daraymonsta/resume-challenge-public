@@ -47,12 +47,15 @@ jobs:
       
       - name: Generate SAS Token
         id: generatesastoken
-        run: echo "::set-output name=sastoken::$(az storage blob generate-sas --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode login --container-name github-actions-deploy --name backend.zip --permissions r --expiry 2022-06-04 --as-user)"
+        run: |
+          h=$(az storage blob generate-sas --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode login --container-name github-actions-deploy --name backend.zip --permissions r --expiry 2022-06-04 --as-user)
+          
+          echo "::set-output name=h::$h"
             
       
       - name: Output SAS Token
         run: |
-          echo ${{ steps.generatesastoken.output.sastoken }}
+          echo ${{ steps.generatesastoken.output.h }}
       
       # Azure logout
       - name: logout
