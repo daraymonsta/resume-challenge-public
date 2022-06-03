@@ -81,8 +81,8 @@ jobs:
           MY_STRING=$(az storage account show-connection-string -g ${{ env.fromjson_parameters_resource_group_value }} --name ${{ env.fromjson_parameters_storage_account_name_value }})
 
           MY_STRING="${MY_STRING//'%'/'%25'}"
-          MY_STRING="${MY_STRING//$'\n'/'%0A'}"
-          MY_STRING="${MY_STRING//$'\r'/'%0D'}"
+          MY_STRING="${MY_STRING//$'\n'/''}"
+          MY_STRING="${MY_STRING//$'\r'/''}"
           MY_STRING="${MY_STRING//$'*'/''}"
           MY_STRING="${MY_STRING//$'{'/''}"
           MY_STRING="${MY_STRING//$'}'/''}"
