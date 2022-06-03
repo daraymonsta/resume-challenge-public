@@ -24,6 +24,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
@@ -44,6 +46,17 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS_CREATEBLOB }}
+      
+      - name: Get Azure version
+        id: test1
+        run: |
+          h=$(az --version)
+
+          echo "::set-output name=h::$h"
+
+      - name: Output Azure version
+        run: |
+          echo "${{ steps.test1.outputs.h }}"
       
       - name: Generate SAS Token
         id: generatesastoken
