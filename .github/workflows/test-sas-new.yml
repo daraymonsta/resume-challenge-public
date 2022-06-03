@@ -83,18 +83,18 @@ jobs:
           MY_STRING="${MY_STRING//'%'/'%25'}"
           MY_STRING="${MY_STRING//$'\n'/'%0A'}"
           MY_STRING="${MY_STRING//$'\r'/'%0D'}"
-          MY_STRING="${MY_STRING//$'***'/'%0A'}"
-          echo "::set-output name=content::$MY_STRING"
+          MY_STRING="${MY_STRING//$'***'/''}"
+          echo "::set-output name=value::$MY_STRING"
           
           
       - name: Output Connection String
         run: |
-          echo "${{ toJSON(fromJSON(steps.connectionstr.outputs.content)) }}"
+          echo "${{ steps.connectionstr.outputs.value }}"
             
       - name: Generate Container SAS Token
         id: gettoken
         run: |
-          h=$(az storage container generate-sas --name github-actions-deploy --permissions r --expiry 2022-06-04 --output tsv --connection-string ${{ steps.connectionstr.outputs.h }})
+          h=$(az storage container generate-sas --name github-actions-deploy --permissions r --expiry 2022-06-04 --output tsv --connection-string ${{ steps.connectionstr.outputs.value }})
           
           echo "::set-output name=h::$h"
       
