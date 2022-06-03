@@ -86,6 +86,7 @@ jobs:
           MY_STRING="${MY_STRING//$'*'/''}"
           MY_STRING="${MY_STRING//$'{'/''}"
           MY_STRING="${MY_STRING//$'}'/''}"
+          MY_STRING="${MY_STRING//$'"connectionString": '/''}"
           echo "::set-output name=value::$MY_STRING"
           
           
