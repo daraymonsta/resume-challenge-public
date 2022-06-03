@@ -1,0 +1,72 @@
+name: Deploy ZIP to Blob Storage CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for changes to the "front-end" folder of the main branch
+  #push:
+  #  branches: [ main ]
+  #  paths: back-end/**
+  #pull_request:
+  #  branches: [ main ]
+  #  paths: back-end/**
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  deploy_zip:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: JSON to env variables
+        uses: antifree/json-to-variables@v1.0.1
+        with:
+          filename: './back-end/arm-templates/azuredeploy.parameters.json'
+          prefix: fromjson
+      - name: Show output
+        run: |
+          echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
+          echo "The storage account name is ${{ env.fromjson_parameters_storage_account_name_value }}"
+          echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
+          echo "The cdn endpoint name is ${{ env.fromjson_parameters_cdn_endpoint_name_value }}"
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+          cache: 'npm'
+
+      - name: "Install and build"
+        run: |
+          npm ci
+          npm run build
+          npm prune --production
+
+      # You can also make use of a ZIP GitHub Action
+      - name: "Create ZIP"
+        run: |
+          Get-ChildItem .\back-end\func-app-visitor-api | Compress-Archive -Destination .\backend.zip
+        shell: pwsh
+
+      # Logs into Azure with GitHub secret
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
+      
+      - name: Upload to blob storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob upload-batch --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode key -d 'github-actions-deploy' -s ./backend.zip --overwrite
+
+      # Azure logout
+      - name: logout
+        run: |
+            az logout
+        if: always()
