@@ -16,8 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'back-end/func-app-visitor-api/.' # set this to the path to your web app project
-  PYTHON_VERSION: '3.9'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'back-end/func-app-visitor-api/.' # path to App Function code
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -39,8 +38,6 @@ jobs:
         run: |
           echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
           echo "The region is ${{ env.fromjson_parameters_region_value }}"
-          echo "The storage account name is ${{ env.fromjson_parameters_storage_account_name_value }}"
-          echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
       
       # Functional verification of ARM templates without connecting to Azure
       - name: ARM Template Toolkit (ARM TTK) Validation
@@ -89,7 +86,7 @@ jobs:
 
   # second job called "deployARM" deploys backend infrastructure using build artifact already validated + uploaded to Azure
   deployARM:
-    name: Deploy ARM Templates CI
+    name: Deploy ARM Templates
     if: github.event.ref == 'refs/heads/main'
     needs: [validateARM]
     runs-on: ubuntu-latest
@@ -107,8 +104,6 @@ jobs:
         run: |
           echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
           echo "The region is ${{ env.fromjson_parameters_region_value }}"
-          echo "The storage account name is ${{ env.fromjson_parameters_storage_account_name_value }}"
-          echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
 
       - name: Download a Build Artifact
         uses: actions/download-artifact@v2.0.8
@@ -157,6 +152,7 @@ jobs:
       - name: Show output
         run: |
           echo "The function app name is ${{ env.fromjson_parameters_function_app_name_value }}"
+          echo "The function app name is ${{ env.fromjson_parameters_pythonVersion_value }}"
 
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
@@ -166,7 +162,7 @@ jobs:
       - name: Setup Python 3.9 Environment
         uses: actions/setup-python@v1
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: ${{ env.fromjson_parameters_pythonVersion_value }}
           
       - name: Resolve Project Dependencies Using Pip
         shell: bash
