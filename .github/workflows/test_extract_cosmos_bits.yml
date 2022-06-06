@@ -35,6 +35,7 @@ jobs:
         run: |
           echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
           echo "The region is ${{ env.fromjson_parameters_cosmos_db_account_name_value }}"
+          echo "The region is ${{ env.fromjson_parameters_function_app_name_name_value }}"
       
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
@@ -96,14 +97,35 @@ jobs:
             print(account_endpoint)
             
       - name: Print Python output
-        if: steps.script.outputs.error == 'true'
+        if: steps.getendpoint.outputs.error == 'false'
         run: |
           printenv "SCRIPT_STDOUT"
-          printenv "SCRIPT_STDERR"
         env:
-          SCRIPT_STDOUT: ${{ steps.script.outputs.stdout }}
-          SCRIPT_STDERR: ${{ steps.script.outputs.stderr }}
+          SCRIPT_STDOUT: ${{ steps.getendpoint.outputs.stdout }}
 
+      - uses: jannekem/run-python-script-action@v1
+        id: getkey
+        with:
+          fail-on-error: false
+          script: |
+            prim_conn_str = "${{steps.extractfromfile.outputs.prop}}"
+            conn_str_list = prim_conn_str.split(';')
+            account_key = conn_str_list[1].split("AccountKey=",1)[1]
+            print(account_key)
+            
+      - name: Print Python output
+        if: steps.getkey.outputs.error == 'false'
+        run: |
+          printenv "SCRIPT_STDOUT"
+        env:
+          SCRIPT_STDOUT: ${{ steps.getkey.outputs.stdout }}
+
+      - name: Azure CLI script - Create Resource Group
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az functionapp config appsettings set --name ${{ env.fromjson_parameters_function_app_name_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --settings "AzureCosmosDBAccountEndpoint=${{ steps.getendpoint.outputs.stdout }} AzureCosmosDBAccountKey=${{ steps.getkey.outputs.stdout }}"
 
       # Azure logout
       - name: logout
