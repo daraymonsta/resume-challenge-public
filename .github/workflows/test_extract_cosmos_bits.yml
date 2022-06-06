@@ -90,7 +90,7 @@ jobs:
         with:
           fail-on-error: false
           script: |
-            prim_conn_str = ${{steps.extractfromfile.outputs.prop}} 
+            prim_conn_str = "${{steps.extractfromfile.outputs.prop}}"
             conn_str_list = prim_conn_str.split(';')
             account_endpoint = conn_str_list[0].split("AccountEndpoint=",1)[1]
             print(account_endpoint)
