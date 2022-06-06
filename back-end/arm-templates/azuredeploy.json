@@ -56,7 +56,7 @@
         "functionWorkerRuntime": {
             "type": "string"
         },
-        "linuxFxVersion": {
+        "pythonVersion": {
             "type": "string"
         },
         "packageUri": {
@@ -147,7 +147,7 @@
                         "value": "[parameters('functionWorkerRuntime')]"
                     },
                     "linuxFxVersion": {
-                        "value": "[parameters('linuxFxVersion')]"
+                        "value": "[concat(parameters('functionWorkerRuntime'), '|', parameters('pythonVersion'))]"
                     },
                     "packageUri": {
                         "value": "[parameters('packageUri')]"

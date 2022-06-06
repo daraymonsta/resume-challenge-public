@@ -56,8 +56,8 @@
         "functionWorkerRuntime": {
             "value": "python"
         },
-        "linuxFxVersion": {
-            "value": "python|3.9"
+        "pythonVersion": {
+            "value": "3.9"
         },
         "packageUri": {
             "value": "1"
