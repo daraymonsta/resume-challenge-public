@@ -69,21 +69,40 @@ jobs:
         run: |
           echo "The string is: ${{ steps.my_string.outputs.content }}"
              
-      - name: Get Connection String
-        id: connectionstr
+      - name: Save Connection String
+        id: saveconnectionstr
         run: |
           echo "[" > output.json
           az cosmosdb keys list --name sql-cosmos-db-account --resource-group CloudResumeChallenge --type connection-strings >> output.json
           echo "]" >> output.json
 
-      - name: get nested property
-        id: format_script
+      - name: Get nested property
+        id: extractfromfile
         uses: notiz-dev/github-action-json-property@release
         with: 
             path: 'output.json'
             prop_path: '0.connectionStrings.0.connectionString'
         
-      - run: echo ${{steps.format_script.outputs.prop}} 
+      - run: echo ${{steps.extractfromfile.outputs.prop}} 
+
+      - uses: jannekem/run-python-script-action@v1
+        id: getendpoint
+        with:
+          fail-on-error: false
+          script: |
+            prim_conn_str = ${{steps.extractfromfile.outputs.prop}} 
+            conn_str_list = prim_conn_str.split(';')
+            account_endpoint = conn_str_list[0].split("AccountEndpoint=",1)[1]
+            print(account_endpoint)
+            
+      - name: Print Python output
+        if: steps.script.outputs.error == 'true'
+        run: |
+          printenv "SCRIPT_STDOUT"
+          printenv "SCRIPT_STDERR"
+        env:
+          SCRIPT_STDOUT: ${{ steps.script.outputs.stdout }}
+          SCRIPT_STDERR: ${{ steps.script.outputs.stderr }}
 
 
       # Azure logout
