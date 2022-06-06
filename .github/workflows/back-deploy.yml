@@ -117,47 +117,7 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
-          
-      - name: Get Connection String
-        id: connectionstr
-        run: |
-          MY_STRING=$(az storage account show-connection-string -g ${{ env.fromjson_parameters_resource_group_value }} --name ${{ env.fromjson_parameters_storage_account_name_value }})
-
-          MY_STRING="${MY_STRING//'%'/'%25'}"
-          MY_STRING="${MY_STRING//$'\n'/''}"
-          MY_STRING="${MY_STRING//$'\r'/''}"
-          MY_STRING="${MY_STRING//$'*'/''}"
-          MY_STRING="${MY_STRING//$'{'/''}"
-          MY_STRING="${MY_STRING//$'}'/''}"
-          MY_STRING="${MY_STRING//$'"connectionString": '/''}"
-          echo "::set-output name=value::$MY_STRING"
-          
-      - name: Output Connection String
-        run: |
-          echo "${{ steps.connectionstr.outputs.value }}"
-            
-      - name: Generate Container SAS Token
-        id: gettoken
-        run: |
-          h=$(az storage container generate-sas --name github-actions-deploy --permissions r --expiry 2022-06-04 --output tsv --connection-string ${{ steps.connectionstr.outputs.value }})
-          
-          echo "::set-output name=h::$h"
-      
-      - name: Output SAS Token
-        run: |
-          echo "${{ steps.gettoken.outputs.h }}"
-      
-      - name: Get Blob URL
-        id: getbloburl
-        run: |
-          h=$(az storage blob url --container-name github-actions-deploy  --name backend.zip --output tsv --connection-string ${{ steps.connectionstr.outputs.value }})
-          
-          echo "::set-output name=h::$h"
-      
-      - name: Output Blob URL
-        run: |
-          echo "${{ steps.getbloburl.outputs.h }}"
-          
+                    
       - name: Deploy ARM Template
         id: deployarmtemplate
         uses: Azure/arm-deploy@v1
