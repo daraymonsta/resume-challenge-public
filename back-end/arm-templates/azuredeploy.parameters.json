@@ -23,8 +23,8 @@
         "template_uri_dns-zone": {
             "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/dns-zone.json"
         },
-        "storage_account_name": {
-            "value": "resumestorage88"
+        "website_storage_account_name": {
+            "value": "websiteresumestorage88"
         },
         "cdn_profile_name": {
             "value": "resumecdn88"
@@ -46,6 +46,9 @@
         },
         "function_app_name": {
             "value": "funcvisitorapi88"
+        },
+        "app_storage_account_name": {
+            "value": "appresumestorage88"
         },
         "storageAccountType": {
             "value": "Standard_LRS"

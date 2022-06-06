@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "region": {
+            "value": "uksouth"
+        },
+        "storage_account_name": {
+            "value": "resumestorage881"
+        },
+        "function_app_name": {
+            "value": "funcvisitorapi881"
+        },
+        "storageAccountType": {
+            "value": "Standard_LRS"
+        },
+        "functionWorkerRuntime": {
+            "value": "python"
+        },
+        "linuxFxVersion": {
+            "value": "python|3.9"
+        },
+        "packageUri": {
+            "value": "1"
+        }
+    }
+}

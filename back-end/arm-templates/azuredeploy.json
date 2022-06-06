@@ -23,7 +23,7 @@
         "template_uri_dns-zone": {
             "type": "string"
         },
-        "storage_account_name": {
+        "website_storage_account_name": {
             "type": "string"
         },
         "cdn_profile_name": {
@@ -45,6 +45,9 @@
             "type": "string"
         },
         "function_app_name": {
+            "type": "string"
+        },
+        "app_storage_account_name": {
             "type": "string"
         },
         "storageAccountType": {
@@ -109,7 +112,7 @@
                         "value": "[parameters('function_app_name')]"
                     },
                     "storage_account_name": {
-                        "value": "[parameters('storage_account_name')]"
+                        "value": "[parameters('website_storage_account_name')]"
                     }
                 }
             }
@@ -132,7 +135,7 @@
                         "value": "[parameters('function_app_name')]"
                     },
                     "storage_account_name": {
-                        "value": "[parameters('storage_account_name')]"
+                        "value": "[parameters('app_storage_account_name')]"
                     },
                     "storageAccountType": {
                         "value": "[parameters('storageAccountType')]"
