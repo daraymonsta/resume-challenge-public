@@ -35,7 +35,7 @@ jobs:
         run: |
           echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
           echo "The region is ${{ env.fromjson_parameters_cosmos_db_account_name_value }}"
-          echo "The region is ${{ env.fromjson_parameters_function_app_name_name_value }}"
+          echo "The region is ${{ env.fromjson_parameters_function_app_name_value }}"
       
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
@@ -125,7 +125,7 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az functionapp config appsettings set --name ${{ env.fromjson_parameters_function_app_name_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --settings "AzureCosmosDBAccountEndpoint=${{ steps.getendpoint.outputs.stdout }} AzureCosmosDBAccountKey=${{ steps.getkey.outputs.stdout }}"
+            az functionapp config appsettings set --name ${{ env.fromjson_parameters_function_app_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --settings "AzureCosmosDBAccountEndpoint=${{ steps.getendpoint.outputs.stdout }} AzureCosmosDBAccountKey=${{ steps.getkey.outputs.stdout }}"
 
       # Azure logout
       - name: logout
