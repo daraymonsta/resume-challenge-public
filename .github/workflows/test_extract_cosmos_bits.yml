@@ -73,10 +73,8 @@ jobs:
         id: connectionstr
         run: |
           CONNSTRJSON=$(az cosmosdb keys list --name sql-cosmos-db-account --resource-group CloudResumeChallenge --type connection-strings)
-          
-          CONNSTRJSON="${CONNSTRJSON//'***'/' '}"
-          CONNSTRJSON="${CONNSTRJSON//$'\n'/' '}"
-          CONNSTRJSON="${CONNSTRJSON//$'\r'/' '}"
+          CONNSTRJSON=${{ toJSON(fromJSON(CONNSTRJSON)) }}
+
           echo "::set-output name=value::$CONNSTRJSON"
           
       - name: Output Connection String
