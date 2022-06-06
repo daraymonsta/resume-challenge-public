@@ -86,7 +86,8 @@ jobs:
         
       - run: echo ${{steps.extractfromfile.outputs.prop}} 
 
-      - uses: jannekem/run-python-script-action@v1
+      - name: Run Python to Output Endpoint
+        uses: jannekem/run-python-script-action@v1
         id: getendpoint
         with:
           fail-on-error: false
@@ -103,7 +104,8 @@ jobs:
         env:
           SCRIPT_STDOUT: ${{ steps.getendpoint.outputs.stdout }}
 
-      - uses: jannekem/run-python-script-action@v1
+      - name: Run Python to Output Key
+        uses: jannekem/run-python-script-action@v1
         id: getkey
         with:
           fail-on-error: false
@@ -120,12 +122,13 @@ jobs:
         env:
           SCRIPT_STDOUT: ${{ steps.getkey.outputs.stdout }}
 
-      - name: Azure CLI script - Create Resource Group
+      - name: Add Application Settings
         uses: azure/CLI@v1
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az functionapp config appsettings set --name ${{ env.fromjson_parameters_function_app_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --settings "AzureCosmosDBAccountEndpoint=${{ steps.getendpoint.outputs.stdout }} AzureCosmosDBAccountKey=${{ steps.getkey.outputs.stdout }}"
+            az functionapp config appsettings set --name ${{ env.fromjson_parameters_function_app_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --settings "AzureCosmosDBAccountEndpoint=${{ steps.getendpoint.outputs.stdout }}"
+            az functionapp config appsettings set --name ${{ env.fromjson_parameters_function_app_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --settings "AzureCosmosDBAccountKey=${{ steps.getkey.outputs.stdout }}"
 
       # Azure logout
       - name: logout
