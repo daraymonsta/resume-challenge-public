@@ -72,14 +72,19 @@ jobs:
       - name: Get Connection String
         id: connectionstr
         run: |
-          CONNSTRJSON=$(az cosmosdb keys list --name sql-cosmos-db-account --resource-group CloudResumeChallenge --type connection-strings)
-          CONNSTRJSON=${ toJSON(fromJSON(CONNSTRJSON)) }
+          echo "[" > output.json
+          az cosmosdb keys list --name sql-cosmos-db-account --resource-group CloudResumeChallenge --type connection-strings >> output.json
+          echo "]" >> output.json
 
-          echo "::set-output name=value::$CONNSTRJSON"
-          
-      - name: Output Connection String
-        run: |
-          echo "${{ steps.connectionstr.outputs.value }}"
+      - name: get nested property
+        id: format_script
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+            path: 'output.json'
+            prop_path: '0.connectionStrings.0.connectionString'
+        
+      - run: echo ${{steps.format_script.outputs.prop}} 
+
 
       # Azure logout
       - name: logout
