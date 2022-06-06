@@ -40,6 +40,34 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
+ 
+      - name: Get Azure version
+        id: test1
+        run: |
+          h=$(az --version)
+          echo "::set-output name=h::$h"
+ 
+      - name: Output Azure version
+        run: |
+          echo "${{ steps.test1.outputs.h }}"
+          
+      - name: create string
+        run: |
+          MY_STRING=$(cat << EOF
+          first line
+          second line
+          third line
+          EOF
+          )
+          MY_STRING="${MY_STRING//'%'/'%25'}"
+          MY_STRING="${MY_STRING//$'\n'/'%0A'}"
+          MY_STRING="${MY_STRING//$'\r'/'%0D'}"
+          echo "::set-output name=content::$MY_STRING"
+        id: my_string
+        
+      - name: display string
+        run: |
+          echo "The string is: ${{ steps.my_string.outputs.content }}"
              
       - name: Get Connection String
         id: connectionstr
