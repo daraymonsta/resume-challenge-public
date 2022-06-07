@@ -39,7 +39,7 @@ jobs:
       - name: Show output
         run: |
           echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
-          echo "The storage account name is ${{ env.fromjson_parameters_storage_account_name_value }}"
+          echo "The storage account name is ${{ env.fromjson_parameters_website_storage_account_name_value }}"
           echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
           echo "The cdn endpoint name is ${{ env.fromjson_parameters_cdn_endpoint_name_value }}"
 
@@ -52,7 +52,7 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob upload-batch --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode key -d '$web' -s front-end/. --overwrite
+            az storage blob upload-batch --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode key -d '$web' -s front-end/. --overwrite
             az cdn endpoint purge --content-paths "/*" --profile-name "${{ env.fromjson_parameters_cdn_profile_name_value }}" --name "${{ env.fromjson_parameters_cdn_endpoint_name_value }}" --resource-group "${{ env.fromjson_parameters_resource_group_value }}"            
 
       # Azure logout
