@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Test Get Cosmos Account Endpoint+Key
 
 # Controls when the workflow will run
@@ -35,7 +33,7 @@ jobs:
         run: |
           echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
           echo "The region is ${{ env.fromjson_parameters_cosmos_db_account_name_value }}"
-          echo "The region is ${{ env.fromjson_parameters_function_app_name_value }}"
+          echo "The function app name is ${{ env.fromjson_parameters_function_app_name_value }}"
       
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
