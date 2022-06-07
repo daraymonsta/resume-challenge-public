@@ -280,3 +280,8 @@ jobs:
         run: |
             az logout
         if: always()
+        
+  # 5th workflow calls the workflow front-deploy while implicitly passing any secrets from this caller workflow
+  callFrontDeploy:
+    uses: .github/workflows/front-deploy.yml@main
+    secrets: inherit
