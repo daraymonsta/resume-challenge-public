@@ -283,5 +283,6 @@ jobs:
         
   # 5th workflow calls the workflow front-deploy while implicitly passing any secrets from this caller workflow
   callFrontDeploy:
+    needs: deployCode   # once ARM templates have deployed services, the front end can be deployed
     uses: .github/workflows/front-deploy.yml@main
     secrets: inherit
