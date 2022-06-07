@@ -99,7 +99,7 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az webapp config connection-string set -g MyResourceGroup -n MyUniqueApp -t Custom \
+            az webapp config connection-string set -g ${{ env.fromjson_parameters_resource_group_value }} -n ${{ env.fromjson_parameters_function_app_name_value }} -t Custom \
               --settings AzureCosmosDBConnectionString='${{steps.extractfromfile.outputs.prop}}'
             az functionapp config appsettings set --name ${{ env.fromjson_parameters_function_app_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --settings "AzureCosmosDBAccountEndpoint=${{ steps.getendpoint.outputs.stdout }}"
             az functionapp config appsettings set --name ${{ env.fromjson_parameters_function_app_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --settings "AzureCosmosDBAccountKey=${{ steps.getkey.outputs.stdout }}"
