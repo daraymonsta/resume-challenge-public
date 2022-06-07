@@ -48,11 +48,12 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
       
-      - name: Upload to Blob, Purge CDN
+      - name: Run CLI Script
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob upload-batch --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode key -d '$web' -s front-end/. --overwrite
+            az storage blob service-properties update --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --static-website --index-document resume.html
+            az storage blob upload-batch --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login -d '$web' -s front-end/. --overwrite
             az cdn endpoint purge --content-paths "/*" --profile-name "${{ env.fromjson_parameters_cdn_profile_name_value }}" --name "${{ env.fromjson_parameters_cdn_endpoint_name_value }}" --resource-group "${{ env.fromjson_parameters_resource_group_value }}"            
 
       # Azure logout
