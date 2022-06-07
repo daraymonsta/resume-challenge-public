@@ -41,43 +41,15 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
- 
-      - name: Get Azure version
-        id: test1
-        run: |
-          h=$(az --version)
-          echo "::set-output name=h::$h"
- 
-      - name: Output Azure version
-        run: |
-          echo "${{ steps.test1.outputs.h }}"
-          
-      - name: create string
-        run: |
-          MY_STRING=$(cat << EOF
-          first line
-          second line
-          third line
-          EOF
-          )
-          MY_STRING="${MY_STRING//'%'/'%25'}"
-          MY_STRING="${MY_STRING//$'\n'/'%0A'}"
-          MY_STRING="${MY_STRING//$'\r'/'%0D'}"
-          echo "::set-output name=content::$MY_STRING"
-        id: my_string
-        
-      - name: display string
-        run: |
-          echo "The string is: ${{ steps.my_string.outputs.content }}"
-             
-      - name: Save Connection String
+              
+      - name: Save Connection String to File
         id: saveconnectionstr
         run: |
           echo "[" > output.json
           az cosmosdb keys list --name sql-cosmos-db-account --resource-group CloudResumeChallenge --type connection-strings >> output.json
           echo "]" >> output.json
 
-      - name: Get nested property
+      - name: Get Nested Property
         id: extractfromfile
         uses: notiz-dev/github-action-json-property@release
         with: 
@@ -127,6 +99,8 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
+            az webapp config connection-string set -g MyResourceGroup -n MyUniqueApp -t Custom \
+              --settings AzureCosmosDBConnectionString='${{steps.extractfromfile.outputs.prop}}'
             az functionapp config appsettings set --name ${{ env.fromjson_parameters_function_app_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --settings "AzureCosmosDBAccountEndpoint=${{ steps.getendpoint.outputs.stdout }}"
             az functionapp config appsettings set --name ${{ env.fromjson_parameters_function_app_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --settings "AzureCosmosDBAccountKey=${{ steps.getkey.outputs.stdout }}"
 
