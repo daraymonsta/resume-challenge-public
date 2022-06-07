@@ -9,6 +9,12 @@ on:
   pull_request:
     branches: [ main ]
     paths: front-end/**
+    
+  # Allows this workflow to be called from a caller workflow
+  workflow_call:
+    secrets:
+      AZURE_SUB_CREDENTIALS:
+        required: true
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -40,19 +46,14 @@ jobs:
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS_RESUMESTORAGE002 }}
+          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
       
-      - name: Upload to blob storage
+      - name: Upload to Blob, Purge CDN
         uses: azure/CLI@v1
         with:
           inlineScript: |
             az storage blob upload-batch --account-name ${{ env.fromjson_parameters_storage_account_name_value }} --auth-mode key -d '$web' -s front-end/. --overwrite
-      
-      - name: Purge CDN endpoint
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az cdn endpoint purge --content-paths "/*" --profile-name "${{ env.fromjson_parameters_cdn_profile_name_value }}" --name "${{ env.fromjson_parameters_cdn_endpoint_name_value }}" --resource-group "${{ env.fromjson_parameters_resource_group_value }}"
+            az cdn endpoint purge --content-paths "/*" --profile-name "${{ env.fromjson_parameters_cdn_profile_name_value }}" --name "${{ env.fromjson_parameters_cdn_endpoint_name_value }}" --resource-group "${{ env.fromjson_parameters_resource_group_value }}"            
 
       # Azure logout
       - name: logout
