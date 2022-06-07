@@ -152,7 +152,7 @@ jobs:
       - name: Show output
         run: |
           echo "The function app name is ${{ env.fromjson_parameters_function_app_name_value }}"
-          echo "The function app name is ${{ env.fromjson_parameters_pythonVersion_value }}"
+          echo "The python version is ${{ env.fromjson_parameters_pythonVersion_value }}"
 
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
@@ -179,6 +179,102 @@ jobs:
           app-name: ${{ env.fromjson_parameters_function_app_name_value }}
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           
+      # Azure logout
+      - name: logout
+        run: |
+            az logout
+        if: always()
+        
+  # 4rd workflow sets the Application Settings and Connection String in the App Function
+  setAppSettings:
+  
+    name: Set Application Settings
+    if: github.event.ref == 'refs/heads/main'
+    needs: [deployCode]  
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: JSON to variables
+        uses: antifree/json-to-variables@v1.0.1
+        with:
+          filename: './back-end/arm-templates/azuredeploy.parameters.json'
+          prefix: fromjson
+          
+      - name: Show output
+        run: |
+          echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
+          echo "The region is ${{ env.fromjson_parameters_cosmos_db_account_name_value }}"
+          echo "The function app name is ${{ env.fromjson_parameters_function_app_name_value }}"
+      
+      # Logs into Azure with GitHub secret
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
+              
+      - name: Save Connection String to File
+        id: saveconnectionstr
+        run: |
+          echo "[" > output.json
+          az cosmosdb keys list --name ${{ env.fromjson_parameters_cosmos_db_account_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --type connection-strings >> output.json
+          echo "]" >> output.json
+
+      - name: Get Nested Property
+        id: extractfromfile
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+            path: 'output.json'
+            prop_path: '0.connectionStrings.0.connectionString'
+        
+      - run: echo ${{steps.extractfromfile.outputs.prop}} 
+
+      - name: Run Python to Output Endpoint
+        uses: jannekem/run-python-script-action@v1
+        id: getendpoint
+        with:
+          fail-on-error: false
+          script: |
+            prim_conn_str = "${{steps.extractfromfile.outputs.prop}}"
+            conn_str_list = prim_conn_str.split(';')
+            account_endpoint = conn_str_list[0].split("AccountEndpoint=",1)[1]
+            print(account_endpoint)
+            
+      - name: Print Python output
+        if: steps.getendpoint.outputs.error == 'false'
+        run: |
+          printenv "SCRIPT_STDOUT"
+        env:
+          SCRIPT_STDOUT: ${{ steps.getendpoint.outputs.stdout }}
+
+      - name: Run Python to Output Key
+        uses: jannekem/run-python-script-action@v1
+        id: getkey
+        with:
+          fail-on-error: false
+          script: |
+            prim_conn_str = "${{steps.extractfromfile.outputs.prop}}"
+            conn_str_list = prim_conn_str.split(';')
+            account_key = conn_str_list[1].split("AccountKey=",1)[1]
+            print(account_key)
+            
+      - name: Print Python output
+        if: steps.getkey.outputs.error == 'false'
+        run: |
+          printenv "SCRIPT_STDOUT"
+        env:
+          SCRIPT_STDOUT: ${{ steps.getkey.outputs.stdout }}
+
+      - name: Add Application Settings
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az webapp config connection-string set -g ${{ env.fromjson_parameters_resource_group_value }} -n ${{ env.fromjson_parameters_function_app_name_value }} -t Custom \
+              --settings AzureCosmosDBConnectionString='${{steps.extractfromfile.outputs.prop}}'
+            az functionapp config appsettings set --name ${{ env.fromjson_parameters_function_app_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --settings "AzureCosmosDBAccountEndpoint=${{ steps.getendpoint.outputs.stdout }}"
+            az functionapp config appsettings set --name ${{ env.fromjson_parameters_function_app_name_value }} --resource-group ${{ env.fromjson_parameters_resource_group_value }} --settings "AzureCosmosDBAccountKey=${{ steps.getkey.outputs.stdout }}"
+
       # Azure logout
       - name: logout
         run: |
