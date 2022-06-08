@@ -25,7 +25,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v1
       - name: Zip Folder
         run: zip -r ./back-end/backend.zip ./back-end/func-app-visitor-api
       
