@@ -36,7 +36,7 @@ jobs:
       - name: Show output
         run: |
           echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
-          echo "The storage account name is ${{ env.fromjson_parameters_storage_account_name_value }}"
+          echo "The storage account name is ${{ env.fromjson_parameters_website_storage_account_name_value }}"
           echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
 
       # Logs into Azure with GitHub secret
@@ -47,7 +47,7 @@ jobs:
       - name: Get Connection String
         id: connectionstr
         run: |
-          MY_STRING=$(az storage account show-connection-string -g ${{ env.fromjson_parameters_resource_group_value }} --name ${{ env.fromjson_parameters_storage_account_name_value }})
+          MY_STRING=$(az storage account show-connection-string -g ${{ env.fromjson_parameters_resource_group_value }} --name ${{ env.fromjson_parameters_website_storage_account_name_value }})
 
           MY_STRING="${MY_STRING//'%'/'%25'}"
           MY_STRING="${MY_STRING//$'\n'/''}"
