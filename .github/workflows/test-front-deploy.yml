@@ -55,14 +55,27 @@ jobs:
             n = 15
             expiry_datetime = datetime.now() + timedelta(minutes=n)
             expiry_str = expiry_datetime.strftime("%Y-%m-%dT%H:%MZ")
-            print(expiry_str)
+            print(expiry_str, end = ' ')
             
       - name: Print Python output
         if: steps.getexpirytime.outputs.error == 'false'
         run: |
-          printenv "SCRIPT_STDOUT"
+          printenv "SCRIPT_STDOUT" > expiry.txt
+          cat expiry.txt
         env:
           SCRIPT_STDOUT: ${{ steps.getexpirytime.outputs.stdout }}
+      
+      - name: Set variables
+        run: |
+          EXPIRY=$(cat expiry.txt)
+          echo "EXPIRYTIME=$EXPIRY" >> $GITHUB_ENV
+      
+      - name: Save SAS to File
+        id: saveSAS
+        run: |
+          echo 
+          az storage container generate-sas --name "$web" --https-only --permissions dlrw --output tsv --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user --expiry ${{ env.VERSION }} > sas.json
+          cat sas.json
       
 
       
