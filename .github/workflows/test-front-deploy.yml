@@ -43,25 +43,7 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
-      
-      - name: Get Connection String
-        id: connectionstr
-        run: |
-          MY_STRING=$(az storage account show-connection-string -g ${{ env.fromjson_parameters_resource_group_value }} --name ${{ env.fromjson_parameters_website_storage_account_name_value }})
-
-          MY_STRING="${MY_STRING//'%'/'%25'}"
-          MY_STRING="${MY_STRING//$'\n'/''}"
-          MY_STRING="${MY_STRING//$'\r'/''}"
-          MY_STRING="${MY_STRING//$'*'/''}"
-          MY_STRING="${MY_STRING//$'{'/''}"
-          MY_STRING="${MY_STRING//$'}'/''}"
-          MY_STRING="${MY_STRING//$'"connectionString": '/''}"
-          echo "::set-output name=value::$MY_STRING"
-          
-      - name: Output Connection String
-        run: |
-          echo "${{ steps.connectionstr.outputs.value }}"
-      
+            
       - name: Run Python to Output Time in 15min
         uses: jannekem/run-python-script-action@v1
         id: getexpirytime
@@ -86,7 +68,7 @@ jobs:
       - name: Generate Container SAS Token
         id: gettoken
         run: |
-          h=$(az storage container generate-sas --name "$web" --https-only --permissions dlrw --expiry ${{ steps.getexpirytime.outputs.stdout }} --output tsv)
+          h=$(az storage container generate-sas --name "$web" --https-only --permissions dlrw --expiry ${{ steps.getexpirytime.outputs.stdout }} --output tsv --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user)
           
           echo "::set-output name=h::$h"
       
