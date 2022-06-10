@@ -86,7 +86,7 @@ jobs:
       - name: Generate Container SAS Token
         id: gettoken
         run: |
-          h=$(az storage container generate-sas --name github-actions-deploy --permissions r --expiry ${{ steps.getexpirytime.outputs.stdout }} --output tsv --connection-string ${{ steps.connectionstr.outputs.value }})
+          h=$(az storage container generate-sas --name $web --permissions w --expiry ${{ steps.getexpirytime.outputs.stdout }} --output tsv --connection-string ${{ steps.connectionstr.outputs.value }})
           echo "::set-output name=h::$h"
       
       - name: Output SAS Token
