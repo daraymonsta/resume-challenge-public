@@ -1,0 +1,111 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Test SAS Generation
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  #push:
+  #  branches: [ main ]
+  #pull_request:
+  #  branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      - name: JSON to variables
+        uses: antifree/json-to-variables@v1.0.1
+        with:
+          filename: './back-end/arm-templates/azuredeploy.parameters.json'
+          prefix: fromjson
+      - name: Show output
+        run: |
+          echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
+          echo "The storage account name is ${{ env.fromjson_parameters_storage_account_name_value }}"
+          echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
+
+      # Logs into Azure with GitHub secret
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
+      
+      - name: Get Connection String
+        id: connectionstr
+        run: |
+          MY_STRING=$(az storage account show-connection-string -g ${{ env.fromjson_parameters_resource_group_value }} --name ${{ env.fromjson_parameters_storage_account_name_value }})
+
+          MY_STRING="${MY_STRING//'%'/'%25'}"
+          MY_STRING="${MY_STRING//$'\n'/''}"
+          MY_STRING="${MY_STRING//$'\r'/''}"
+          MY_STRING="${MY_STRING//$'*'/''}"
+          MY_STRING="${MY_STRING//$'{'/''}"
+          MY_STRING="${MY_STRING//$'}'/''}"
+          MY_STRING="${MY_STRING//$'"connectionString": '/''}"
+          echo "::set-output name=value::$MY_STRING"
+          
+      - name: Output Connection String
+        run: |
+          echo "${{ steps.connectionstr.outputs.value }}"
+      
+      - name: Run Python to Output Time in 15min
+        uses: jannekem/run-python-script-action@v1
+        id: getexpirytime
+        with:
+          fail-on-error: false
+          script: |
+            from datetime import datetime
+            from datetime import timedelta
+            n = 15
+            expiry_datetime = datetime.now() + timedelta(minutes=n)
+            expiry_str = expiry_datetime.strftime("%Y-%m-%d %H:%M")
+            print(expiry_str)
+            
+      - name: Print Python output
+        if: steps.getexpirytime.outputs.error == 'false'
+        run: |
+          printenv "SCRIPT_STDOUT"
+        env:
+          SCRIPT_STDOUT: ${{ steps.getexpirytime.outputs.stdout }}
+      
+      
+      - name: Generate Container SAS Token
+        id: gettoken
+        run: |
+          h=$(az storage container generate-sas --name github-actions-deploy --permissions r --expiry ${{ steps.getexpirytime.outputs.stdout }} --output tsv --connection-string ${{ steps.connectionstr.outputs.value }})
+          echo "::set-output name=h::$h"
+      
+      - name: Output SAS Token
+        run: |
+          echo "${{ steps.gettoken.outputs.h }}"
+      
+      - name: Run CLI Script
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob service-properties update --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --static-website --index-document resume.html
+            az storage blob upload-batch --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --sas-token ${{ steps.gettoken.outputs.h }} -d '$web' -s front-end/. --overwrite --connection-string ${{ steps.connectionstr.outputs.value }}
+            az cdn endpoint purge --content-paths "/*" --profile-name "${{ env.fromjson_parameters_cdn_profile_name_value }}" --name "${{ env.fromjson_parameters_cdn_endpoint_name_value }}" --resource-group "${{ env.fromjson_parameters_resource_group_value }}"
+    
+      # Azure logout
+      - name: logout
+        run: |
+            az logout
+        if: always()
