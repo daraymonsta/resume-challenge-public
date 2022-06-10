@@ -55,7 +55,7 @@ jobs:
             n = 15
             expiry_datetime = datetime.now() + timedelta(minutes=n)
             expiry_str = expiry_datetime.strftime("%Y-%m-%dT%H:%MZ")
-            print(expiry_str, end = ' ')
+            print(expiry_str)
             
       - name: Print Python output
         if: steps.getexpirytime.outputs.error == 'false'
@@ -67,13 +67,13 @@ jobs:
       - name: Save SAS to File
         id: saveSAS
         run: |
-          az storage container generate-sas --name "$web" --https-only --permissions dlrw --expiry ${{ steps.getexpirytime.outputs.stdout }} --output tsv --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user > sas.json
+          az storage container generate-sas --name "$web" --https-only --permissions dlrw --output tsv --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user --expiry ${{ steps.getexpirytime.outputs.stdout }} > sas.json
           cat sas.json
       
       - name: Generate Container SAS Token
         id: gettoken
         run: |
-          h=$(az storage container generate-sas --name "$web" --https-only --permissions dlrw --expiry ${{ steps.getexpirytime.outputs.stdout }} --output tsv --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user)
+          h=$(az storage container generate-sas --name "$web" --https-only --permissions dlrw --output tsv --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user --expiry ${{ steps.getexpirytime.outputs.stdout }})
           
           echo "::set-output name=h::$h"
       
