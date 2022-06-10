@@ -69,12 +69,19 @@ jobs:
         run: |
           EXPIRY=$(cat expiry.txt)
           echo "EXPIRYTIME=$EXPIRY" >> $GITHUB_ENV
-          
+      
+      - name: Save SAS to File
+        id: saveSAS
+        run: |
+          az storage container generate-sas --name "$web" --https-only --permissions dlrw --output tsv \
+            --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user --expiry ${{ env.EXPIRYTIME }} > sas.json
+          cat sas.json
       
       - name: Generate Container SAS Token
         id: gettoken
         run: |
-          h=$(az storage container generate-sas --name "$web" --https-only --permissions dlrw --output tsv --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user --expiry ${{ env.EXPIRYTIME }})
+          h=$(az storage container generate-sas --name "$web" --https-only --permissions dlrw --output tsv \
+            --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user --expiry ${{ env.EXPIRYTIME }})
           
           echo "::set-output name=h::$h"
       
