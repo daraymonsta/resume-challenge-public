@@ -64,11 +64,7 @@ jobs:
         env:
           SCRIPT_STDOUT: ${{ steps.getexpirytime.outputs.stdout }}
       
-      - name: Save SAS to File
-        id: saveSAS
-        run: |
-          az storage container generate-sas --name "$web" --https-only --permissions dlrw --output tsv --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user --expiry ${{ steps.getexpirytime.outputs.stdout }} > sas.json
-          cat sas.json
+
       
       - name: Generate Container SAS Token
         id: gettoken
