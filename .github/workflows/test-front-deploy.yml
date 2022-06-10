@@ -55,7 +55,7 @@ jobs:
             n = 15
             expiry_datetime = datetime.now() + timedelta(minutes=n)
             expiry_str = expiry_datetime.strftime("%Y-%m-%dT%H:%MZ")
-            print(expiry_str, end = '')
+            print(expiry_str, end = ' ')
             
       - name: Print Python output
         if: steps.getexpirytime.outputs.error == 'false'
