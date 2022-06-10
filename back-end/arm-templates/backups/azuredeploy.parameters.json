@@ -20,20 +20,17 @@
         "template_uri_cdn_profile": {
             "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cdn-profile.json"
         },
-        "template_uri_dns_zone": {
+        "template_uri_dns-zone": {
             "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/dns-zone.json"
         },
         "website_storage_account_name": {
             "value": "websiteresumestorage88"
         },
         "cdn_profile_name": {
-            "value": "resumecdnprofile88"
+            "value": "resumecdn88"
         },
-        "endpointName": {
-            "value": "generalsettings"
-        },
-        "dnszone_topleveldomain_name": {
-            "value": "com"
+        "cdn_endpoint_name": {
+            "value": "rossi88"
         },
         "cosmos_db_account_name": {
             "value": "sqlcosmosdbaccount88"
@@ -64,12 +61,6 @@
         },
         "packageUri": {
             "value": "1"
-        },
-        "CDNSku": {
-            "value": "Standard_Microsoft"
-        },
-        "cdnLocation": {
-            "value": "global"
         }
     }
 }

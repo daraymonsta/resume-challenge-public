@@ -20,7 +20,16 @@
         "template_uri_cdn_profile": {
             "type": "string"
         },
-        "template_uri_dns_zone": {
+        "template_uri_dns-zone": {
+            "type": "string"
+        },
+        "website_storage_account_name": {
+            "type": "string"
+        },
+        "cdn_profile_name": {
+            "type": "string"
+        },
+        "cdn_endpoint_name": {
             "type": "string"
         },
         "cosmos_db_account_name": {
@@ -52,52 +61,6 @@
         },
         "packageUri": {
             "type": "string"
-        },
-        "cdn_profile_name": {
-            "type": "string",
-            "metadata": {
-            "description": "Name of the CDN Profile"
-            }
-        },
-        "endpointName": {
-            "type": "string",
-            "metadata": {
-            "description": "Name of the CDN Endpoint, must be unique"
-            }
-        },
-        "dnszone_topleveldomain_name": {
-            "defaultValue": "com",
-            "type": "String",
-            "metadata": {
-            "description": "Ending of the domain name e.g. .com, .net, .org, .com.au"
-            }
-        },
-        "CDNSku": {
-            "type": "string",
-            "defaultValue": "Standard_Microsoft",
-            "allowedValues": [
-            "Standard_Akamai",
-            "Standard_Microsoft",
-            "Standard_Verizon",
-            "Premium_Verizon"
-            ],
-            "metadata": {
-            "description": "CDN SKU names"
-            }
-        },
-        "cdnLocation": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().location]",
-            "metadata": {
-            "description": "Location for all resources."
-            }
-        },
-        "website_storage_account_name": {
-            "defaultValue": "resumestorage002",
-            "type": "String",
-            "metadata": {
-            "description": "Storage account name for static website."
-            }
         }
     },
     "functions": [],
@@ -188,61 +151,6 @@
                     },
                     "packageUri": {
                         "value": "[parameters('packageUri')]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2021-04-01",
-            "name": "linkTemplateDnsZone",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[parameters('template_uri_dns_zone')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "endpointName": {
-                        "value": "[parameters('endpointName')]"
-                    },
-                    "dnszone_topleveldomain_name": {
-                        "value": "[parameters('dnszone_topleveldomain_name')]"
-                    },
-                    "profileName": {
-                        "value": "[parameters('cdn_profile_name')]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2021-04-01",
-            "name": "linkTemplateCdn",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[parameters('template_uri_cdn_profile')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "profileName": {
-                        "value": "[parameters('cdn_profile_name')]"
-                    },
-                    "endpointName": {
-                        "value": "[parameters('endpointName')]"
-                    },
-                    "dnszone_topleveldomain_name": {
-                        "value": "[parameters('dnszone_topleveldomain_name')]"
-                    },
-                    "CDNSku": {
-                        "value": "[parameters('CDNSku')]"
-                    },
-                    "cdnLocation": {
-                        "value": "[parameters('cdnLocation')]"
-                    },
-                    "website_storage_account_name": {
-                        "value": "[parameters('website_storage_account_name')]"
                     }
                 }
             }

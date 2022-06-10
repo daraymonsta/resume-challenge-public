@@ -1,0 +1,140 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "endpointName": {
+            "defaultValue": "generalsettings",
+            "type": "String"
+        },
+        "dnszone_topleveldomain_name": {
+            "defaultValue": "com",
+            "type": "String"
+        },
+        "profileName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the CDN Profile"
+        }
+      }
+    },
+    "variables": {
+        "dnszone_domain_name": "[concat(parameters('endpointName'), '.', parameters('dnszone_topleveldomain_name'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/dnszones",
+            "apiVersion": "2018-05-01",
+            "name": "[variables('dnszone_domain_name')]",
+            "location": "global",
+            "properties": {
+                "zoneType": "Public"
+            }
+        },
+        {
+            "type": "Microsoft.Network/dnszones/A",
+            "apiVersion": "2018-05-01",
+            "name": "[concat(variables('dnszone_domain_name'), '/@')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/dnszones', variables('dnszone_domain_name'))]"
+            ],
+            "properties": {
+                "TTL": 3600,
+                "targetResource": {
+                    "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Cdn/profiles/', parameters('profileName'), '/endpoints/', parameters('endpointName'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/dnszones/CNAME",
+            "apiVersion": "2018-05-01",
+            "name": "[concat(variables('dnszone_domain_name'), '/cdnverify')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/dnszones', variables('dnszone_domain_name'))]"
+            ],
+            "properties": {
+                "TTL": 3600,
+                "CNAMERecord": {
+                    "cname": "[concat('cdnverify.', parameters('endpointName'), '.azureedge.net')]"
+                },
+                "targetResource": {}
+            }
+        },
+        {
+            "type": "Microsoft.Network/dnszones/CNAME",
+            "apiVersion": "2018-05-01",
+            "name": "[concat(variables('dnszone_domain_name'), '/cdnverify.www')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/dnszones', variables('dnszone_domain_name'))]"
+            ],
+            "properties": {
+                "TTL": 3600,
+                "CNAMERecord": {
+                    "cname": "[concat('cdnverify.', parameters('endpointName'), '.azureedge.net')]"
+                },
+                "targetResource": {}
+            }
+        },
+        {
+            "type": "Microsoft.Network/dnszones/CNAME",
+            "apiVersion": "2018-05-01",
+            "name": "[concat(variables('dnszone_domain_name'), '/www')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/dnszones', variables('dnszone_domain_name'))]"
+            ],
+            "properties": {
+                "TTL": 3600,
+                "CNAMERecord": {
+                    "cname": "[concat(parameters('endpointName'), '.azureedge.net')]"
+                },
+                "targetResource": {}
+            }
+        },
+        {
+            "type": "Microsoft.Network/dnszones/NS",
+            "apiVersion": "2018-05-01",
+            "name": "[concat(variables('dnszone_domain_name'), '/@')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/dnszones', variables('dnszone_domain_name'))]"
+            ],
+            "properties": {
+                "TTL": 172800,
+                "NSRecords": [
+                    {
+                        "nsdname": "ns1-36.azure-dns.com."
+                    },
+                    {
+                        "nsdname": "ns2-36.azure-dns.net."
+                    },
+                    {
+                        "nsdname": "ns3-36.azure-dns.org."
+                    },
+                    {
+                        "nsdname": "ns4-36.azure-dns.info."
+                    }
+                ],
+                "targetResource": {}
+            }
+        },
+        {
+            "type": "Microsoft.Network/dnszones/SOA",
+            "apiVersion": "2018-05-01",
+            "name": "[concat(variables('dnszone_domain_name'), '/@')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/dnszones', variables('dnszone_domain_name'))]"
+            ],
+            "properties": {
+                "TTL": 3600,
+                "SOARecord": {
+                    "email": "azuredns-hostmaster.microsoft.com",
+                    "expireTime": 2419200,
+                    "host": "ns1-36.azure-dns.com.",
+                    "minimumTTL": 300,
+                    "refreshTime": 3600,
+                    "retryTime": 300,
+                    "serialNumber": 1
+                },
+                "targetResource": {}
+            }
+        }
+    ]
+}
