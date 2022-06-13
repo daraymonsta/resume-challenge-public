@@ -1,0 +1,81 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Test Enable HTTPS on Custom Domain
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  #push:
+  #  branches: [ main ]
+  #pull_request:
+  #  branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: JSON to variables
+        uses: antifree/json-to-variables@v1.0.1
+        with:
+          filename: './back-end/arm-templates/azuredeploy.parameters.json'
+          prefix: fromjson
+          
+      - name: Show output
+        run: |
+          echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
+          echo "The storage account name is ${{ env.fromjson_parameters_website_storage_account_name_value }}"
+          echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
+
+      # Logs into Azure with GitHub secret
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}  
+      
+      - name: Save custom domain status to File
+        id: saveStatus
+        run: |
+          az cdn custom-domain show -g CloudResumeChallenge88 --endpoint-name generalsettings --profile-name resumecdnprofile88 -n www-generalsettings-com > status.json
+          
+      - name: Set variables
+        run: |
+          RESP=$(cat status.json)
+          echo "RESPONSEJSON=$RESP" >> $GITHUB_ENV
+ 
+      - name: Run Python to Output Time in 15min
+        uses: jannekem/run-python-script-action@v1
+        id: getStatus
+        with:
+          fail-on-error: false
+          script: |
+            temp_json = json.loads(${{ env.RESPONSEJSON }})
+            print(temp_json["customHttpsProvisioningState"])
+            if temp_json["customHttpsProvisioningState"] == "Enabling" or temp_json["customHttpsProvisioningState"] == "Enabled":
+                print("True")
+            else:
+                print("False")
+            
+      - name: Print Python output
+        if: steps.getStatus.outputs.value == 'True'
+        run: |
+          echo "Run command to Enable HTTPS"
+        env:
+          SCRIPT_STDOUT: ${{ steps.getStatus.outputs.stdout }}
+    
+      # Azure logout
+      - name: logout
+        run: |
+            az logout
+        if: always()
