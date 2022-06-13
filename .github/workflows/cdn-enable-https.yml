@@ -75,7 +75,7 @@ jobs:
                 print("False")
             
       - name: Print Python output
-        if: steps.getStatus.outputs.value == 'False'
+        if: steps.getStatus.outputs.stdout == 'False'
         run: |
           echo "Running command to Enable HTTPS..."
           az cdn custom-domain enable-https -g ${{ env.fromjson_parameters_resource_group_value }} --profile-name ${{ env.fromjson_parameters_cdn_profile_name_value }} --endpoint-name ${{ env.fromjson_parameters_endpointName_value }} -n $DOMAIN1
