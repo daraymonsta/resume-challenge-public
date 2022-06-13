@@ -51,6 +51,7 @@ jobs:
           
       - name: Set variables
         run: |
+          cat status.json
           RESP=$(cat status.json)
           echo "RESPONSEJSON=$RESP" >> $GITHUB_ENV
  
