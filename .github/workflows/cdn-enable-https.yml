@@ -40,17 +40,17 @@ jobs:
           echo "The cdn endpoint name is ${{ env.fromjson_parameters_endpointName_value }}"
           echo "Top level domain name is ${{ env.fromjson_parameters_dnszone_topleveldomain_name_value }}"
 
-      # Logs into Azure with GitHub secret
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}  
-      
       - name: Add Env DOMAIN1 variable
         id: addEnv
         run: |
           customDomain1="www-${{ env.fromjson_parameters_endpointName_value }}-${{ env.fromjson_parameters_dnszone_topleveldomain_name_value }}"
           echo $customDomain1
           echo "DOMAIN1=$customDomain1" >> $GITHUB_ENV
+
+      # Logs into Azure with GitHub secret
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}  
           
       - name: Save custom domain JSON to File
         id: saveResponse
