@@ -59,7 +59,7 @@ jobs:
           echo "Response from CLI command..."
           cat status.json
           
-      - name: Run Python to Output Time in 15min
+      - name: Run Python script
         uses: jannekem/run-python-script-action@v1
         id: getStatus
         with:
@@ -70,15 +70,26 @@ jobs:
               temp_json = json.load(jsonFile)
               jsonFile.close()
             if temp_json["customHttpsProvisioningState"] == "Enabling" or temp_json["customHttpsProvisioningState"] == "Enabled":
-                print("True")
+                print("True", end = '')
             else:
-                print("False")
+                print("False", end = '')
             
       - name: Print Python output
         if: steps.getStatus.outputs.stdout == 'False'
         run: |
+          echo "Is HTTPS enabled on the custom domain?"
+          printenv "SCRIPT_STDOUT"
           echo "Running command to Enable HTTPS..."
           az cdn custom-domain enable-https -g ${{ env.fromjson_parameters_resource_group_value }} --profile-name ${{ env.fromjson_parameters_cdn_profile_name_value }} --endpoint-name ${{ env.fromjson_parameters_endpointName_value }} -n $DOMAIN1
+        env:
+          SCRIPT_STDOUT: ${{ steps.getStatus.outputs.stdout }}
+          
+      - name: Print Python output
+        if: steps.getStatus.outputs.stdout == 'True'
+        run: |
+          echo "Is HTTPS enabled on the custom domain?"
+          printenv "SCRIPT_STDOUT"
+          echo "Therefore, no need to enable HTTPS"
         env:
           SCRIPT_STDOUT: ${{ steps.getStatus.outputs.stdout }}
     
