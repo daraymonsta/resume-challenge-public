@@ -48,28 +48,25 @@ jobs:
         id: saveStatus
         run: |
           az cdn custom-domain show -g CloudResumeChallenge88 --endpoint-name generalsettings --profile-name resumecdnprofile88 -n www-generalsettings-com > status.json
-          
-      - name: Set variables
-        run: |
+          echo "Response from CLI command..."
           cat status.json
-          RESP=$(cat status.json)
-          echo "RESPONSEJSON=$RESP" >> $GITHUB_ENV
- 
+          
       - name: Run Python to Output Time in 15min
         uses: jannekem/run-python-script-action@v1
         id: getStatus
         with:
           fail-on-error: false
           script: |
-            temp_json = json.loads(${{ env.RESPONSEJSON }})
-            print(temp_json["customHttpsProvisioningState"])
+            with open("status.json") as jsonFile:
+              temp_json = json.load(jsonFile)
+              jsonFile.close()
             if temp_json["customHttpsProvisioningState"] == "Enabling" or temp_json["customHttpsProvisioningState"] == "Enabled":
                 print("True")
             else:
                 print("False")
             
       - name: Print Python output
-        if: steps.getStatus.outputs.value == 'True'
+        if: steps.getStatus.outputs.value == 'False'
         run: |
           echo "Run command to Enable HTTPS"
         env:
