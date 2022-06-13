@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "profileName": {
-        "value": "resumecdnprofile88"
+        "value": "resumecdnprofile99"
       },
       "endpointName": {
         "value": "generalsettings"
@@ -18,7 +18,7 @@
         "value": "global"
       },
       "website_storage_account_name": {
-        "value": "websiteresumestorage88"
+        "value": "websiteresumestorage99"
       }
     }
   }

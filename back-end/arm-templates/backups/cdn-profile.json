@@ -198,6 +198,30 @@
         "dependsOn": [
           "[resourceId('Microsoft.Cdn/profiles', parameters('profileName'))]"
         ]
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
+        "apiVersion": "2021-06-01",
+        "name": "[concat(parameters('profileName'), '/', parameters('endpointName'), '/', parameters('endpointName'), '-', parameters('dnszone_topleveldomain_name'))]",
+        "properties": {
+            "hostName": "[variables('dnszone_domain_name')]"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Cdn/profiles', parameters('profileName'))]",
+          "[resourceId('Microsoft.Cdn/profiles/endpoints', parameters('profileName'), parameters('endpointName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
+        "apiVersion": "2021-06-01",
+        "name": "[concat(parameters('profileName'), '/', parameters('endpointName'), '/www-', parameters('endpointName'), '-', parameters('dnszone_topleveldomain_name'))]",
+        "properties": {
+            "hostName": "[concat('www.', variables('dnszone_domain_name'))]"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Cdn/profiles', parameters('profileName'))]",
+          "[resourceId('Microsoft.Cdn/profiles/endpoints', parameters('profileName'), parameters('endpointName'))]"
+        ]
       }
     ]
   }

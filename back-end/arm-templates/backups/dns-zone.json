@@ -90,26 +90,51 @@
             }
         },
         {
-            "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
-            "apiVersion": "2021-06-01",
-            "name": "[concat(parameters('profileName'), '/', parameters('endpointName'), '/', parameters('endpointName'), '-', parameters('dnszone_topleveldomain_name'))]",
-            "properties": {
-                "hostName": "[variables('dnszone_domain_name')]"
-            },
+            "type": "Microsoft.Network/dnszones/NS",
+            "apiVersion": "2018-05-01",
+            "name": "[concat(variables('dnszone_domain_name'), '/@')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/dnszones', variables('dnszone_domain_name'))]"
-            ]
+            ],
+            "properties": {
+                "TTL": 172800,
+                "NSRecords": [
+                    {
+                        "nsdname": "ns1-36.azure-dns.com."
+                    },
+                    {
+                        "nsdname": "ns2-36.azure-dns.net."
+                    },
+                    {
+                        "nsdname": "ns3-36.azure-dns.org."
+                    },
+                    {
+                        "nsdname": "ns4-36.azure-dns.info."
+                    }
+                ],
+                "targetResource": {}
+            }
         },
         {
-            "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
-            "apiVersion": "2021-06-01",
-            "name": "[concat(parameters('profileName'), '/', parameters('endpointName'), '/www-', parameters('endpointName'), '-', parameters('dnszone_topleveldomain_name'))]",
-            "properties": {
-                "hostName": "[concat('www.', variables('dnszone_domain_name'))]"
-            },
+            "type": "Microsoft.Network/dnszones/SOA",
+            "apiVersion": "2018-05-01",
+            "name": "[concat(variables('dnszone_domain_name'), '/@')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/dnszones', variables('dnszone_domain_name'))]"
-            ]
+            ],
+            "properties": {
+                "TTL": 3600,
+                "SOARecord": {
+                    "email": "azuredns-hostmaster.microsoft.com",
+                    "expireTime": 2419200,
+                    "host": "ns1-36.azure-dns.com.",
+                    "minimumTTL": 300,
+                    "refreshTime": 3600,
+                    "retryTime": 300,
+                    "serialNumber": 1
+                },
+                "targetResource": {}
+            }
         }
     ]
 }

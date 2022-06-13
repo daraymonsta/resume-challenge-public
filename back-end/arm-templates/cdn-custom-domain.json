@@ -1,0 +1,41 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "endpointName": {
+            "defaultValue": "generalsettings",
+            "type": "String"
+        },
+        "dnszone_topleveldomain_name": {
+            "defaultValue": "com",
+            "type": "String"
+        },
+        "profileName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the CDN Profile"
+        }
+      }
+    },
+    "variables": {
+        "dnszone_domain_name": "[concat(parameters('endpointName'), '.', parameters('dnszone_topleveldomain_name'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
+            "apiVersion": "2021-06-01",
+            "name": "[concat(parameters('profileName'), '/', parameters('endpointName'), '/', parameters('endpointName'), '-', parameters('dnszone_topleveldomain_name'))]",
+            "properties": {
+                "hostName": "[variables('dnszone_domain_name')]"
+            }
+        },
+        {
+            "type": "Microsoft.Cdn/profiles/endpoints/customDomains",
+            "apiVersion": "2021-06-01",
+            "name": "[concat(parameters('profileName'), '/', parameters('endpointName'), '/www-', parameters('endpointName'), '-', parameters('dnszone_topleveldomain_name'))]",
+            "properties": {
+                "hostName": "[concat('www.', variables('dnszone_domain_name'))]"
+            }
+        }
+    ]
+}
