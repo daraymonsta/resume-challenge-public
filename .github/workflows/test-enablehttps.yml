@@ -45,12 +45,17 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}  
       
-      - name: Save custom domain status to File
-        id: saveStatus
+      - name: Add Env DOMAIN1 variable
+        id: addEnv
         run: |
           customDomain1="www-${{ env.fromjson_parameters_endpointName_value }}-${{ env.fromjson_parameters_dnszone_topleveldomain_name_value }}"
           echo $customDomain1
-          az cdn custom-domain show -g ${{ env.fromjson_parameters_resource_group_value }} --endpoint-name ${{ env.fromjson_parameters_endpointName_value }} --profile-name ${{ env.fromjson_parameters_cdn_profile_name_value }} -n $customDomain1 > status.json
+          echo "DOMAIN1=$customDomain1" >> $GITHUB_ENV
+          
+      - name: Save custom domain JSON to File
+        id: saveResponse
+        run: |
+          az cdn custom-domain show -g ${{ env.fromjson_parameters_resource_group_value }} --endpoint-name ${{ env.fromjson_parameters_endpointName_value }} --profile-name ${{ env.fromjson_parameters_cdn_profile_name_value }} -n $DOMAIN1 > status.json
           echo "Response from CLI command..."
           cat status.json
           
@@ -72,7 +77,8 @@ jobs:
       - name: Print Python output
         if: steps.getStatus.outputs.value == 'False'
         run: |
-          echo "Run command to Enable HTTPS"
+          echo "Running command to Enable HTTPS..."
+          az cdn custom-domain enable-https -g ${{ env.fromjson_parameters_resource_group_value }} --profile-name ${{ env.fromjson_parameters_cdn_profile_name_value }} --endpoint-name ${{ env.fromjson_parameters_endpointName_value }} -n $DOMAIN1
         env:
           SCRIPT_STDOUT: ${{ steps.getStatus.outputs.stdout }}
     
