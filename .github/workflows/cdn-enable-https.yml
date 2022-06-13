@@ -74,42 +74,26 @@ jobs:
             else:
                 print('False')
       
-      - name: create string
+      - name: Remove carriage return from output
+        id: trimmedOutput
         run: |
           MY_STRING=${{ steps.getStatus.outputs.stdout }}
           MY_STRING="${MY_STRING//$'\n'/''}"
           MY_STRING="${MY_STRING//$'\r'/''}"
           echo "::set-output name=content::$MY_STRING"
-        id: my_string
       
-      - name: display string if False
-        if: steps.my_string.outputs.content == 'False'
+      - name: Enable HTTPS if False
+        if: steps.trimmedOutput.outputs.content == 'False'
         run: |
-          echo "The string is: ${{ steps.my_string.outputs.content }}"
-      
-      - name: display string if True
-        if: steps.my_string.outputs.content == 'True'
-        run: |
-          echo "The string is: ${{ steps.my_string.outputs.content }}"
-      
-      - name: Print Python output if False
-        if: steps.getStatus.outputs.stdout == 'False'
-        run: |
-          echo "Is HTTPS enabled on the custom domain?"
-          printenv "SCRIPT_STDOUT"
+          echo "HTTPS is not enabled."
           echo "Running command to Enable HTTPS..."
           az cdn custom-domain enable-https -g ${{ env.fromjson_parameters_resource_group_value }} --profile-name ${{ env.fromjson_parameters_cdn_profile_name_value }} --endpoint-name ${{ env.fromjson_parameters_endpointName_value }} -n $DOMAIN1
-        env:
-          SCRIPT_STDOUT: ${{ steps.getStatus.outputs.stdout }}
-          
-      - name: Print Python output
+      
+      - name: Display msg if True
+        if: steps.trimmedOutput.outputs.content == 'True'
         run: |
-          echo "Is HTTPS enabled on the custom domain?"
-          printenv "SCRIPT_STDOUT"
-          echo "If true, there is no need to enable HTTPS"
-        env:
-          SCRIPT_STDOUT: ${{ steps.getStatus.outputs.stdout }}
-    
+          echo "HTTPS is already enabled. No need to enable."
+          
       # Azure logout
       - name: logout
         run: |
