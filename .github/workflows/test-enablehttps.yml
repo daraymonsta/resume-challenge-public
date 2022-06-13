@@ -36,8 +36,9 @@ jobs:
       - name: Show output
         run: |
           echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
-          echo "The storage account name is ${{ env.fromjson_parameters_website_storage_account_name_value }}"
           echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
+          echo "The cdn endpoint name is ${{ env.fromjson_parameters_endpointName_value }}"
+          echo "Top level domain name is ${{ env.fromjson_parameters_dnszone_topleveldomain_name_value }}"
 
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
@@ -47,7 +48,9 @@ jobs:
       - name: Save custom domain status to File
         id: saveStatus
         run: |
-          az cdn custom-domain show -g CloudResumeChallenge88 --endpoint-name generalsettings --profile-name resumecdnprofile88 -n www-generalsettings-com > status.json
+          customDomain1="www-${{ env.fromjson_parameters_endpointName_value }}-${{ env.fromjson_parameters_dnszone_topleveldomain_name_value }}"
+          echo $customDomain1
+          az cdn custom-domain show -g ${{ env.fromjson_parameters_resource_group_value }} --endpoint-name ${{ env.fromjson_parameters_endpointName_value }} --profile-name ${{ env.fromjson_parameters_cdn_profile_name_value }} -n $customDomain1 > status.json
           echo "Response from CLI command..."
           cat status.json
           
