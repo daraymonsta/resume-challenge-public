@@ -84,12 +84,11 @@ jobs:
         env:
           SCRIPT_STDOUT: ${{ steps.getStatus.outputs.stdout }}
           
-      - name: Print Python output if True
-        if: steps.getStatus.outputs.stdout == 'True'
+      - name: Print Python output
         run: |
           echo "Is HTTPS enabled on the custom domain?"
           printenv "SCRIPT_STDOUT"
-          echo "Therefore, no need to enable HTTPS"
+          echo "If true, there is no need to enable HTTPS"
         env:
           SCRIPT_STDOUT: ${{ steps.getStatus.outputs.stdout }}
     
