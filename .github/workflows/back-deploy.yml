@@ -20,7 +20,7 @@ env:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # first job called "validation"
+  # validates the ARM templates
   validateARM:
     name: ARM Template Validations
     runs-on: ubuntu-latest
@@ -84,7 +84,7 @@ jobs:
           path: back-end/arm-templates/*
           if-no-files-found: error
 
-  # second job called "deployARM" deploys backend infrastructure using build artifact already validated + uploaded to Azure
+  # deploys backend infrastructure using build artifact already validated + uploaded to Azure
   deployARM:
     name: Deploy ARM Templates
     if: github.event.ref == 'refs/heads/main'
@@ -133,7 +133,7 @@ jobs:
             az logout
         if: always()
         
-  # 3rd workflow deploys the code on GitHub repo to Azure function app
+  # deploys the code on GitHub repo to Azure function app
   deployCode:
     name: Deploy code to App
     if: github.event.ref == 'refs/heads/main'
@@ -184,8 +184,20 @@ jobs:
         run: |
             az logout
         if: always()
-        
-  # 4rd workflow sets the Application Settings and Connection String in the App Function
+  
+  # calls the workflow front-deploy while implicitly passing any secrets from this caller workflow
+  callFrontDeploy:
+    needs: [deployARM]   # once ARM templates have deployed services, the front end can be deployed
+    uses: ./.github/workflows/front-deploy.yml
+    secrets: inherit
+  
+  # calls the workflow cdn-enable-https while implicitly passing any secrets from this caller workflow
+  callEnableHTTPS:
+    needs: [deployARM]   # once ARM templates have deployed services, the front end can be deployed
+    uses: ./.github/workflows/cdn-enable-https.yml
+    secrets: inherit
+  
+  # sets the Application Settings and Connection String in the App Function
   setAppSettings:
   
     name: Set Application Settings
@@ -280,9 +292,3 @@ jobs:
         run: |
             az logout
         if: always()
-        
-  # 5th workflow calls the workflow front-deploy while implicitly passing any secrets from this caller workflow
-  callFrontDeploy:
-    needs: [deployCode]   # once ARM templates have deployed services, the front end can be deployed
-    uses: ./.github/workflows/front-deploy.yml
-    secrets: inherit
