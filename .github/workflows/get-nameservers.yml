@@ -2,6 +2,12 @@ name: Get Static Website Azure Nameservers
 
 # Controls when the workflow will run
 on:
+  # Allows this workflow to be called from a caller workflow
+  workflow_call:
+    secrets:
+      AZURE_SUB_CREDENTIALS:
+        required: true
+  
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -63,6 +69,7 @@ jobs:
       - name: Print Nameservers
         if: steps.getNameservers.outputs.error == 'false'
         run: |
+          echo "Nameservers:"
           printenv "SCRIPT_STDOUT"
         env:
           SCRIPT_STDOUT: ${{ steps.getNameservers.outputs.stdout }}
