@@ -8,7 +8,7 @@
       "dnszone_topleveldomain_name": {
         "value": "com"
       },
-      "profileName": {
+      "cdn_profile_name": {
         "value": "resumecdnprofile99"
       }
     }

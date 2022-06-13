@@ -1,0 +1,78 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "region": {
+            "value": "uksouth"
+        },
+        "resource_group": {
+            "value": "CloudResumeChallenge99"
+        },
+        "template_uri_cosmos_db": {
+            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cosmos-db.json"
+        },
+        "template_uri_storage": {
+            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/storage.json"
+        },
+        "template_uri_func_app": {
+            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/function-app.json"
+        },
+        "template_uri_cdn_profile": {
+            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cdn-profile.json"
+        },
+        "template_uri_dns_zone": {
+            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/dns-zone.json"
+        },
+        "template_uri_cdn_domain": {
+            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cdn-custom-domain.json"
+        },
+        "website_storage_account_name": {
+            "value": "websiteresumestorage99"
+        },
+        "cdn_profile_name": {
+            "value": "resumecdnprofile99"
+        },
+        "endpointName": {
+            "value": "generalsettings"
+        },
+        "dnszone_topleveldomain_name": {
+            "value": "com"
+        },
+        "cosmos_db_account_name": {
+            "value": "sqlcosmosdbaccount99"
+        },
+        "cosmos_db_name": {
+            "value": "ResumeDB"
+        },
+        "cosmos_db_container": {
+            "value": "VisitorCount"
+        },
+        "cosmos_db_location": {
+            "value": "ukwest"
+        },
+        "function_app_name": {
+            "value": "funcvisitorapi99"
+        },
+        "app_storage_account_name": {
+            "value": "appresumestorage99"
+        },
+        "storageAccountType": {
+            "value": "Standard_LRS"
+        },
+        "functionWorkerRuntime": {
+            "value": "python"
+        },
+        "pythonVersion": {
+            "value": "3.9"
+        },
+        "packageUri": {
+            "value": "1"
+        },
+        "CDNSku": {
+            "value": "Standard_Microsoft"
+        },
+        "cdnLocation": {
+            "value": "global"
+        }
+    }
+}

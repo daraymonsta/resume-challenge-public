@@ -250,6 +250,33 @@
                     }
                 }
             }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments','linkTemplateCdn')]",
+                "[resourceId('Microsoft.Resources/deployments','linkTemplateDnsZone')]"
+            ],
+            "apiVersion": "2021-04-01",
+            "name": "linkTemplateCdnDomain",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('template_uri_cdn_domain')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "endpointName": {
+                        "value": "[parameters('endpointName')]"
+                    },
+                    "dnszone_topleveldomain_name": {
+                        "value": "[parameters('dnszone_topleveldomain_name')]"
+                    },
+                    "profileName": {
+                        "value": "[parameters('cdn_profile_name')]"
+                    }
+                }
+            }
         }
     ],
     "outputs": {
