@@ -74,7 +74,7 @@ jobs:
         id: saveSAS
         run: |
           ls
-          az storage container generate-sas --name "$web" --https-only --expiry ${{ env.EXPIRYTIME }} --permissions dlrw --output tsv --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user
+          az storage container generate-sas --name "$web" --https-only --permissions dlrw --output tsv --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user
       
       - name: Generate Container SAS Token
         id: gettoken
