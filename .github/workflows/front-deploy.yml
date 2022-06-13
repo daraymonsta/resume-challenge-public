@@ -41,7 +41,7 @@ jobs:
           echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
           echo "The storage account name is ${{ env.fromjson_parameters_website_storage_account_name_value }}"
           echo "The cdn profile name is ${{ env.fromjson_parameters_cdn_profile_name_value }}"
-          echo "The cdn endpoint name is ${{ env.fromjson_parameters_cdn_endpoint_name_value }}"
+          echo "The cdn endpoint name is ${{ env.fromjson_parameters_endpointName_value }}"
 
       # Logs into Azure with GitHub secret
       - uses: azure/login@v1
@@ -54,7 +54,7 @@ jobs:
           inlineScript: |
             az storage blob service-properties update --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --static-website --index-document resume.html
             az storage blob upload-batch --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login -d '$web' -s front-end/. --overwrite
-            az cdn endpoint purge --content-paths "/*" --profile-name "${{ env.fromjson_parameters_cdn_profile_name_value }}" --name "${{ env.fromjson_parameters_cdn_endpoint_name_value }}" --resource-group "${{ env.fromjson_parameters_resource_group_value }}"            
+            az cdn endpoint purge --content-paths "/*" --profile-name "${{ env.fromjson_parameters_cdn_profile_name_value }}" --name "${{ env.fromjson_parameters_endpointName_value }}" --resource-group "${{ env.fromjson_parameters_resource_group_value }}"            
 
       # Azure logout
       - name: logout
