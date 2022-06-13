@@ -52,7 +52,7 @@ jobs:
           script: |
             from datetime import datetime
             from datetime import timedelta
-            n = 15
+            n = 75
             expiry_datetime = datetime.now() + timedelta(minutes=n)
             expiry_str = expiry_datetime.strftime("%Y-%m-%dT%H:%MZ")
             print(expiry_str)
