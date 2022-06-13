@@ -70,9 +70,9 @@ jobs:
               temp_json = json.load(jsonFile)
               jsonFile.close()
             if temp_json["customHttpsProvisioningState"] == "Enabling" or temp_json["customHttpsProvisioningState"] == "Enabled":
-                print('True')
+                print('True', end = '')
             else:
-                print('False')
+                print('False', end = '')
             
       - name: Print Python output if False
         if: steps.getStatus.outputs.stdout == 'False'
