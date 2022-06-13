@@ -70,12 +70,12 @@ jobs:
               temp_json = json.load(jsonFile)
               jsonFile.close()
             if temp_json["customHttpsProvisioningState"] == "Enabling" or temp_json["customHttpsProvisioningState"] == "Enabled":
-                print("True")
+                print('True')
             else:
-                print("False")
+                print('False')
             
       - name: Print Python output if False
-        if: steps.getStatus.outputs.stdout == "False"
+        if: steps.getStatus.outputs.stdout == 'False'
         run: |
           echo "Is HTTPS enabled on the custom domain?"
           printenv "SCRIPT_STDOUT"
@@ -85,7 +85,7 @@ jobs:
           SCRIPT_STDOUT: ${{ steps.getStatus.outputs.stdout }}
           
       - name: Print Python output if True
-        if: steps.getStatus.outputs.stdout == "True"
+        if: steps.getStatus.outputs.stdout == 'True'
         run: |
           echo "Is HTTPS enabled on the custom domain?"
           printenv "SCRIPT_STDOUT"
