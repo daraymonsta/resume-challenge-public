@@ -216,8 +216,8 @@
         {
             "type": "Microsoft.Resources/deployments",
             "dependsOn": [
-                "[resourceId(resourceGroup().name, 'Microsoft.Storage/storageAccounts', parameters('website_storage_account_name'))]",
-                "[resourceId(resourceGroup().name, 'Microsoft.Network/dnszones', variables('dnszone_domain_name'))]"
+                "[resourceId('Microsoft.Resources/deployments','linkTemplateStorage')]",
+                "[resourceId('Microsoft.Resources/deployments','linkTemplateDnsZone')]"
             ],
             "apiVersion": "2021-04-01",
             "name": "linkTemplateCdn",
