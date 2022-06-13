@@ -6,10 +6,6 @@
             "defaultValue": "resumestorage002",
             "type": "String"
         },
-        "function_app_name": {
-            "defaultValue": "az-func-visitor-api2",
-            "type": "String"
-        },
         "region": {
             "defaultValue": "uksouth",
             "type": "string"
@@ -203,20 +199,6 @@
                 "defaultEncryptionScope": "$account-encryption-key",
                 "denyEncryptionScopeOverride": false,
                 "publicAccess": "None"
-            }
-        },
-        {
-            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
-            "apiVersion": "2021-09-01",
-            "name": "[concat(parameters('storage_account_name'), '/default/', parameters('function_app_name'), '8ee2')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storage_account_name'), 'default')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storage_account_name'))]"
-            ],
-            "properties": {
-                "accessTier": "TransactionOptimized",
-                "shareQuota": 5120,
-                "enabledProtocols": "SMB"
             }
         }
     ]

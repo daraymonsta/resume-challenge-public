@@ -11,13 +11,10 @@
       "dnszone_topleveldomain_name": {
         "value": "com"
       },
-      "originUrl": {
-        "value": "websiteresumestorage88.z33.web.core.windows.net"
-      },
       "CDNSku": {
         "value": "Standard_Microsoft"
       },
-      "location": {
+      "cdnLocation": {
         "value": "global"
       },
       "website_storage_account_name": {
