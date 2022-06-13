@@ -47,9 +47,9 @@ jobs:
         run: |
           az network dns record-set ns list -g ${{ env.fromjson_parameters_resource_group_value }} -z $DNSZONE > dnszone.json
 
-      - name: Run Python to Output Time in 15min
+      - name: Run Python to Print Nameservers
         uses: jannekem/run-python-script-action@v1
-        id: getStatus
+        id: getNameservers
         with:
           fail-on-error: false
           script: |
@@ -61,11 +61,11 @@ jobs:
               print(temp_json[0]["nsRecords"][x]["nsdname"])
             
       - name: Print Nameservers
-        if: steps.getendpoint.outputs.error == 'false'
+        if: steps.getNameservers.outputs.error == 'false'
         run: |
           printenv "SCRIPT_STDOUT"
         env:
-          SCRIPT_STDOUT: ${{ steps.getendpoint.outputs.stdout }}
+          SCRIPT_STDOUT: ${{ steps.getNameservers.outputs.stdout }}
           
       # Azure logout
       - name: logout
