@@ -190,11 +190,11 @@ jobs:
     needs: [deployARM]   # once ARM templates have deployed services, the front end can be deployed
     uses: ./.github/workflows/front-deploy.yml
     secrets: inherit
-  
-  # calls the workflow cdn-enable-https while implicitly passing any secrets from this caller workflow
-  callEnableHTTPS:
+    
+  # calls the workflow get-nameservers while implicitly passing any secrets from this caller workflow
+  callGetNameservers:
     needs: [deployARM]   # once ARM templates have deployed services, the front end can be deployed
-    uses: ./.github/workflows/cdn-enable-https.yml
+    uses: ./.github/workflows/get-nameservers.yml
     secrets: inherit
   
   # sets the Application Settings and Connection String in the App Function
@@ -292,3 +292,58 @@ jobs:
         run: |
             az logout
         if: always()
+    
+  # deploys backend infrastructure using build artifact already validated + uploaded to Azure
+  deployCustomDomainARM:
+    name: Deploy Custom Domains ARM Template
+    if: github.event.ref == 'refs/heads/main'
+    needs: [callGetNameservers]
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      
+      - name: JSON to variables
+        uses: antifree/json-to-variables@v1.0.1
+        with:
+          filename: './back-end/arm-templates/azuredeploy.parameters.json'
+          prefix: fromjson
+          
+      - name: Show output
+        run: |
+          echo "The resource group is ${{ env.fromjson_parameters_resource_group_value }}"
+          echo "The region is ${{ env.fromjson_parameters_region_value }}"
+
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.0.8
+        with:
+          name: ResumeBackendTemplate
+
+      # Logs into Azure with GitHub secret
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_SUB_CREDENTIALS }}
+                    
+      - name: Deploy Custom Domains ARM Template
+        id: deployarmtemplate
+        uses: Azure/arm-deploy@v1
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
+          region: ${{ env.fromjson_parameters_region_value }}
+          resourceGroupName: ${{ env.fromjson_parameters_resource_group_value }}
+          template: cdn-custom-domain.json
+          deploymentMode: Incremental
+          parameters: azuredeploy.parameters.json
+
+      # Azure logout
+      - name: logout
+        run: |
+            az logout
+        if: always()
+  
+  # calls the workflow cdn-enable-https while implicitly passing any secrets from this caller workflow
+  callEnableHTTPS:
+    needs: [deployCustomDomainARM]   # once ARM templates have deployed services, the front end can be deployed
+    uses: ./.github/workflows/cdn-enable-https.yml
+    secrets: inherit
