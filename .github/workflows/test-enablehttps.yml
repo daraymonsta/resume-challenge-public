@@ -57,6 +57,7 @@ jobs:
         with:
           fail-on-error: false
           script: |
+            import json
             with open("status.json") as jsonFile:
               temp_json = json.load(jsonFile)
               jsonFile.close()
