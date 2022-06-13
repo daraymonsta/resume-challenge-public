@@ -73,7 +73,7 @@ jobs:
       - name: Save SAS to File
         id: saveSAS
         run: |
-          ls
+          az –version
           az storage container generate-sas --name "$web" --https-only --permissions dlrw --output tsv --account-name ${{ env.fromjson_parameters_website_storage_account_name_value }} --auth-mode login --as-user --expiry "2022-06-14"
       
       - name: Generate Container SAS Token
