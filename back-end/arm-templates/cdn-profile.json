@@ -198,6 +198,21 @@
         "dependsOn": [
           "[resourceId('Microsoft.Cdn/profiles', parameters('profileName'))]"
         ]
+      },
+      {
+        "type": "Microsoft.Network/dnszones/A",
+        "apiVersion": "2018-05-01",
+        "name": "[concat(variables('dnszone_domain_name'), '/@')]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Cdn/profiles', parameters('profileName'))]",
+            "[resourceId('Microsoft.Cdn/profiles/endpoints', parameters('profileName'), parameters('endpointName'))]"
+        ],
+        "properties": {
+            "TTL": 3600,
+            "targetResource": {
+                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Cdn/profiles/', parameters('profileName'), '/endpoints/', parameters('endpointName'))]"
+            }
+        }
       }
     ]
   }

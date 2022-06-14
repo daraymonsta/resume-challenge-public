@@ -31,20 +31,6 @@
             }
         },
         {
-            "type": "Microsoft.Network/dnszones/A",
-            "apiVersion": "2018-05-01",
-            "name": "[concat(variables('dnszone_domain_name'), '/@')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/dnszones', variables('dnszone_domain_name'))]"
-            ],
-            "properties": {
-                "TTL": 3600,
-                "targetResource": {
-                    "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Cdn/profiles/', parameters('profileName'), '/endpoints/', parameters('endpointName'))]"
-                }
-            }
-        },
-        {
             "type": "Microsoft.Network/dnszones/CNAME",
             "apiVersion": "2018-05-01",
             "name": "[concat(variables('dnszone_domain_name'), '/cdnverify')]",
