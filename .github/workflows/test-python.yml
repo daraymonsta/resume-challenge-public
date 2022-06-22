@@ -47,7 +47,17 @@ jobs:
           flake8 ./back-end/func-app-visitor-api --count --select=E9,F63,F7,F82 --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 ./back-end/func-app-visitor-api --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-        
+      
+      - name: Save date to Env variable
+        run: echo "MY_DATE=$(date +%Y%m%d%H%M)" >> $GITHUB_ENV
+          
       - name: Test with pytest
-        run: |
-          pytest
+        run: pytest --junitxml=back-end/pytest-results/test-results-${{ env.MY_DATE }}-${{ matrix.python-version }}.xml
+        
+      - name: Upload pytest test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytest-results-${{ env.MY_DATE }}-${{ matrix.python-version }}
+          path: back-end/pytest-results/test-results-${{ env.MY_DATE }}-${{ matrix.python-version }}.xml
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}
