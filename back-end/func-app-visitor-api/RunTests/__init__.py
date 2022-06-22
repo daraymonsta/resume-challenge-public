@@ -4,6 +4,7 @@ import azure.functions as func
 import io
 import sys
 
+
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
@@ -16,3 +17,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     sys.stdout = stdout_bak  # restore stdout
 
     return func.HttpResponse(str(output), status_code=200)
+    
