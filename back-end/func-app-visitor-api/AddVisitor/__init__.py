@@ -1,9 +1,7 @@
 import logging
 import azure.functions as func
-
-import os
-from azure.cosmos import CosmosClient, PartitionKey
 from shared_code import extra_func, db_func
+
 
 def main(req: func.HttpRequest, cosmosIn: func.DocumentList, cosmos: func.Out[func.Document]) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
@@ -31,11 +29,12 @@ def main(req: func.HttpRequest, cosmosIn: func.DocumentList, cosmos: func.Out[fu
                 # setup connection to cosmos DB + container
                 container = db_func.setup_db_and_container("ResumeDB", "VisitorCount")
                 read_item = db_func.read_record(visitor_record_json, container)
-                
+
                 # increment visitor counter by 1
                 read_item['visitorCounter'] = read_item['visitorCounter'] + 1
                 updated_item = db_func.update_record(read_item, container)
-                logging.info('Replaced Item\'s Id is {0}, new visitorCounter={1}'.format(updated_item['id'], updated_item['visitorCounter']))
+                logging.info('Replaced Item\'s Id is {0}, new visitorCounter={1}'.format(
+                    updated_item['id'], updated_item['visitorCounter']))
 
                 status_code_value = 200
                 json_return_data = extra_func.create_json_to_return(status_code_value, updated_item['visitorCounter'])

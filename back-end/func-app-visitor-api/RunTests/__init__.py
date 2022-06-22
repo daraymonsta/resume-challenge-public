@@ -17,4 +17,3 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     sys.stdout = stdout_bak  # restore stdout
 
     return func.HttpResponse(str(output), status_code=200)
-    
