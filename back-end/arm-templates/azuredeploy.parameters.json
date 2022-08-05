@@ -6,25 +6,25 @@
             "value": "uksouth"
         },
         "resource_group": {
-            "value": "CloudResumeChallenge101"
+            "value": "DadFunnyStories101"
         },
         "template_uri_cosmos_db": {
-            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cosmos-db.json"
+            "value": "https://raw.githubusercontent.com/daraymonsta/dad-funny-stories-public/main/back-end/arm-templates/cosmos-db.json"
         },
         "template_uri_storage": {
-            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/storage.json"
+            "value": "https://raw.githubusercontent.com/daraymonsta/dad-funny-stories-public/main/back-end/arm-templates/storage.json"
         },
         "template_uri_func_app": {
-            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/function-app.json"
+            "value": "https://raw.githubusercontent.com/daraymonsta/dad-funny-stories-public/main/back-end/arm-templates/function-app.json"
         },
         "template_uri_cdn_profile": {
-            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cdn-profile.json"
+            "value": "https://raw.githubusercontent.com/daraymonsta/dad-funny-stories-public/main/back-end/arm-templates/cdn-profile.json"
         },
         "template_uri_dns_zone": {
-            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/dns-zone.json"
+            "value": "https://raw.githubusercontent.com/daraymonsta/dad-funny-stories-public/main/back-end/arm-templates/dns-zone.json"
         },
         "template_uri_cdn_domain": {
-            "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cdn-custom-domain.json"
+            "value": "https://raw.githubusercontent.com/daraymonsta/dad-funny-stories-public/main/back-end/arm-templates/cdn-custom-domain.json"
         },
         "website_storage_account_name": {
             "value": "websiteresumestorage101"
@@ -33,7 +33,7 @@
             "value": "resumecdnprofile101"
         },
         "endpointName": {
-            "value": "generalsettings"
+            "value": "eugenerossi"
         },
         "dnszone_topleveldomain_name": {
             "value": "com"
