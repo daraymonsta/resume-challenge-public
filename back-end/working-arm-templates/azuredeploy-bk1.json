@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "template_uri_cosmos_db": {
+            "defaultValue": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cosmos-db.json",
+            "type": "string"
+        },
+        "template_uri_func_app": {
+            "defaultValue": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/function-app.json",
+            "type": "string"
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "name": "linkTemplateCosmosDB",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('template_uri_cosmos_db')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "name": "linkTemplateFuncApp",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[parameters('template_uri_func_app')]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+
+    }
+}

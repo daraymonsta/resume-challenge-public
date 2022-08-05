@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><script>
+    window[Symbol.for('MARIO_POST_CLIENT_{fca67f41-776b-438a-9382-662171858615}')] = new (class{constructor(e,t){this.name=e,this.destination=t,this.serverListeners={},this.bgRequestsListeners={},this.bgEventsListeners={},window.addEventListener("message",e=>{const t=e.data,n=!(t.destination&&t.destination===this.name),s=!t.event;if(!n&&!s)if("MARIO_POST_SERVER__BG_RESPONSE"===t.event){const e=t.args;if(this.hasBgRequestListener(e.requestId)){try{this.bgRequestsListeners[e.requestId](e.response)}catch(e){}delete this.bgRequestsListeners[e.requestId]}}else if("MARIO_POST_SERVER__BG_EVENT"===t.event){const e=t.args;if(this.hasBgEventListener(e.event))try{this.bgEventsListeners[t.id](e.payload)}catch(e){}}else if(this.hasServerListener(t.event))try{this.serverListeners[t.event](t.args)}catch(e){}})}emitToServer(e,t){const n=this.generateUIID(),s={args:t,destination:this.destination,event:e,id:n};return window.postMessage(s,location.origin),n}emitToBg(e,t){const n=this.generateUIID(),s={bgEventName:e,requestId:n,args:t};return this.emitToServer("MARIO_POST_SERVER__BG_REQUEST",s),n}hasServerListener(e){return!!this.serverListeners[e]}hasBgRequestListener(e){return!!this.bgRequestsListeners[e]}hasBgEventListener(e){return!!this.bgEventsListeners[e]}fromServerEvent(e,t){this.serverListeners[e]=t}fromBgEvent(e,t){this.bgEventsListeners[e]=t}fromBgResponse(e,t){this.bgRequestsListeners[e]=t}generateUIID(){return"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,(function(e){const t=16*Math.random()|0;return("x"===e?t:3&t|8).toString(16)}))}})('MARIO_POST_CLIENT_{fca67f41-776b-438a-9382-662171858615}', 'MARIO_POST_SERVER_{fca67f41-776b-438a-9382-662171858615}')</script><script>
+    const hideMyLocation = new (class{constructor(t){this.clientKey=t,this.watchIDs={},this.client=window[Symbol.for(t)];const e=navigator.geolocation.getCurrentPosition,n=navigator.geolocation.watchPosition,o=navigator.geolocation.clearWatch,r=this;navigator.geolocation.getCurrentPosition=function(t,n,o){r.handle(e,"GET",t,n,o)},navigator.geolocation.watchPosition=function(t,e,o){return r.handle(n,"WATCH",t,e,o)},navigator.geolocation.clearWatch=function(t){if(-1===t)return;const e=r.watchIDs[t];return delete r.watchIDs[t],o.apply(this,[e])}}handle(t,e,n,o,r){const i=this.client.emitToBg("HIDE_MY_LOCATION__GET_LOCATION");let a=this.getRandomInt(0,1e5);if(this.client.fromBgResponse(i,i=>{if(i.enabled)if("SUCCESS"===i.status){const t=this.map(i);n(t)}else{const t=this.errorObj();o(t),a=-1}else{const i=[n,o,r],c=t.apply(navigator.geolocation,i);"WATCH"===e&&(this.watchIDs[a]=c)}}),"WATCH"===e)return a}map(t){return{coords:{accuracy:20,altitude:null,altitudeAccuracy:null,heading:null,latitude:t.latitude,longitude:t.longitude,speed:null},timestamp:Date.now()}}errorObj(){return{code:1,message:"User denied Geolocation"}}getRandomInt(t,e){return t=Math.ceil(t),e=Math.floor(e),Math.floor(Math.random()*(e-t+1))+t}})('MARIO_POST_CLIENT_{fca67f41-776b-438a-9382-662171858615}')
+  </script><head>
+
+	<title>Ramon Rossi | Teacher, DevOps Eng | rayrossi.net</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Akshar:wght@300&display=swap" rel="stylesheet"/> 
+	<link href="https://fonts.googleapis.com/css2?family=Akshar:wght@500&display=swap" rel="stylesheet"/> 
+
+	<link href="https://fonts.googleapis.com/css?family=Libre+Franklin:300,400,600" rel="stylesheet" />
+	
+	<link rel="stylesheet" type="text/css" href="reset-fonts-grids.css" media="all"> 
+	<link rel="stylesheet" type="text/css" href="resume-ray.css" media="all">
+
+</head>
+<body bis_register="W3sibWFzdGVyIjp0cnVlLCJleHRlbnNpb25JZCI6IntmY2E2N2Y0MS03NzZiLTQzOGEtOTM4Mi02NjIxNzE4NTg2MTV9IiwiYWRibG9ja2VyU3RhdHVzIjp7IkRJU1BMQVkiOiJkaXNhYmxlZCIsIkZBQ0VCT09LIjoiZGlzYWJsZWQiLCJUV0lUVEVSIjoiZGlzYWJsZWQifSwidmVyc2lvbiI6IjEuOC4xMyIsInNjb3JlIjoxMDgxM31d">
+	<script type="text/javascript" src="resume-api-fetch.js"></script>
+	<script src="https://az-func-visitor-api2.azurewebsites.net/api/AddAVisitor/rayrossi.net?code=JiH9OC6iofYizP--ieTqkEXopatGQJIgfzInS3DNB0LCAzFu_nwS6g==" async></script>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
+	<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
+
+<div class="canvas_div_pdf">	
+<div id="doc2" class="yui-t7" bis_skin_checked="1">
+	<div id="inner" bis_skin_checked="1">
+	
+		<div id="hd" bis_skin_checked="1">
+			<div class="yui-gc" bis_skin_checked="1">
+				<div class="yui-u first" bis_skin_checked="1">
+					<h1>Ramon Rossi</h1>
+					<h2>DevOps Engineer, Teacher</h2>
+				</div>
+
+				<div class="yui-u" bis_skin_checked="1">
+					<div class="contact-info" bis_skin_checked="1">
+						<h3>London, UK</h3>
+						<h3><a href="mailto:ramon_rossi@hotmail.com">Email Me</a></h3>
+						<h3><a href="https://www.linkedin.com/in/ramonrossi">LinkedIn Profile</a></h3>
+						<h3><a onClick="getPDF(); return false;" href="rossi_resume.pdf" target="_blank">Download This Resume</a></h3>
+						<h3>+44 7527 693486</h3>
+					</div><!--// .contact-info -->
+				</div>
+			</div><!--// .yui-gc -->
+		</div><!--// hd -->
+
+		<div id="bd" bis_skin_checked="1">
+			<div id="yui-main" bis_skin_checked="1">
+				<div class="yui-b" bis_skin_checked="1">
+
+					<div class="yui-gf">
+						<div class="yui-u first">
+							<h2>Profile</h2>
+						</div>
+						<div class="yui-u">
+							<p class="enlarge">
+							  Highly motivated individual seeking to leverage the knowledge of building and developing cloud applications alongside skills and experience gained from the teaching sector. Passionate about cloud and software architecture and design with great sensitivity to serve business needs and deliver high-quality, efficient, and cost-effective solutions. Goal-oriented with the ability to adapt quickly to new situations and assimilate new knowledge, techniques, and technologies.
+							</p>
+						</div>
+					</div><!--// .yui-gf -->
+					
+					
+
+					<div class="yui-gf" bis_skin_checked="1">
+						<div class="yui-u first" bis_skin_checked="1">
+							<h2>Qualifications</h2>
+						</div>
+						<div class="yui-u" bis_skin_checked="1">
+
+							<div class="talent" bis_skin_checked="1">
+								<h2>DevOps</h2>
+								<p>- Microsoft Certified DevOps Engineer Expert (In Progress)</p>
+								<p>- Azure Fundamentals AZ-900</p>
+								<p>- Cisco DevNet Associate</p>
+								<p>- IBM Data Science Professional Certificate </p>
+								<p>- Machine Learning Certificate (Stanford University)</p>
+							</div>
+
+							<div class="talent" bis_skin_checked="1">
+								<h2>Software Development</h2>
+								<p>- B.InfoTech (Computer Software Development), University of Southern Queensland</p>
+								<p>- CompTIA A+</p>
+								<p>- CompTIA i-Net+</p>
+								<p>- Oracle SQL and PL/SQL Certification</p>
+							</div>
+
+							<div class="talent" bis_skin_checked="1">
+								<h2>Teaching</h2>
+								<p>- Primary Teacher with Qualified Teacher Status (Ref No. 1231535)</p>
+								<p>- B.Ed (Primary), University of Southern Queensland</p>
+								<p>- CELTA, University of Cambridge</p>
+								<p>- Certificate IV in Assessment & Workplace Training (AUS)</p>
+							</div>
+						</div>
+					</div><!--// .yui-gf -->
+					
+
+					<div class="yui-gf" bis_skin_checked="1">
+						<div class="yui-u first" bis_skin_checked="1">
+							<h2>Technical</h2>
+						</div>
+						<div class="yui-u" bis_skin_checked="1">
+
+							<ul class="talent">
+								<li>Microsoft Power BI</li>
+								<li>Tableau</li>
+								<li>Dashboard Design</li>
+							</ul>
+
+							<ul class="talent">
+								<li>Cloud SQL</li>
+								<li>Cloud CDN</li>
+								<li>Cloud Storage</li>
+							</ul>
+
+							<ul class="talent">
+								<li>Bash/PowerShell</li>
+								<li>Docker</li>
+								<li>API Design</li>
+							</ul>
+
+							<ul class="talent">
+								<li>Python</li>
+								<li>Matlab</li>
+								<li class="last">WordPress</li>
+							</ul>
+
+							<ul class="talent">
+								<li>Azure Functions/CosmosDB</li>
+								<li>ARM Templates/GitHub Actions</li>
+								<li class="last">ASP.NET/SQL Server DB</li>
+							</ul>
+
+							<ul class="talent">
+								<li>Cisco Networking</li>
+								<li>YANG/NETCONF/RESTCONF</li>
+								<li class="last">IBM Watson Studio</li>
+							</ul>
+						</div>
+					</div><!--// .yui-gf-->
+					
+					
+					<div class="yui-gf">
+						<div class="yui-u first">
+							<h2>Projects</h2>
+						</div>
+						<div class="yui-u">
+						  <div class="job-only" bis_skin_checked="1">
+								<h2>Cloud Resume Challenge</h2>
+								<h3>GitHub: <a href="https://github.com/daraymonsta/resume-challenge-public">GitHub Repo</a></h3>
+								<h3>Blog Post: <a href="https://dev.to/daraymonsta/a-teachers-guide-to-cloud-jdk">A Teacher's Guide to Cloud!</a></h3>
+								<h3>Original Project Link: <a href="https://cloudresumechallenge.dev/instructions/">Resume Challenge by Forrest Brazeal</a></h3>
+								<h4>May 2022</h4>
+							  <p>Building a website from the ground up with a database, APIGW, custom domain, HTTPs Security, Serverless Functions triggered through APIGW written in Python, all packaged into a ARM template only utilizing Azure's wide variety of cloud services.
+							  </p>
+							</div>
+						</div>
+					</div><!--// .yui-gf -->
+					
+					
+					
+					<div class="yui-gf" bis_skin_checked="1">
+
+					
+	
+						<div class="yui-u first" bis_skin_checked="1">
+							<h2>Employment History</h2>
+						</div><!--// .yui-u -->
+
+						<div class="yui-u" bis_skin_checked="1">
+
+							<div class="job" bis_skin_checked="1">
+								<h2>Gladstone Park Primary & other schools</h2>
+								<h3>Primary School Teacher</h3>
+								<h4>January 2006 - Present</h4>
+                <p>Class teacher responsible for: 
+                  <ul>
+                    <li class="last">- Progress and safety of children</li>
+                    <li class="last">- Teaching lifelong skills and pastoral care</li>
+                    <li class="last">- Planning learning experiences and creating/curating differentiated learning resources</li>
+                    <li class="last">- Feedback to children, along with assessment and reporting</li>
+                    <li class="last">- Initiating/monitoring/improving programs to address special needs</li>
+                    <li class="last">- Training/coaching and timetabling support staff</li>
+                    <li class="last">- Working as a partner with all stakeholders including senior management, parents and other staff (including teachers, support teachers, SENCO, teaching assistants)</li>
+                    <li class="last">- Working as a teamplayer in both yeargroup and curriulum teams</li>
+                    <li class="last">- Leading a curriculum area for the school</li>
+                 </ul>
+				 </p>
+							</div>
+
+							<div class="job" bis_skin_checked="1">
+								<h2>Bay Connect</h2>
+								<h3>Technical Project Officer</h3>
+								<h4>February 2000 - December 2003</h4>
+								<p class="last">
+								<ul>
+                    <li class="last">- Designed and promoted both static HTML and dynammic SQL database-driven ASP websites</li>
+                    <li class="last">- Installed and configured firewalls, web and network servers, staff workstations and a training room of 30 computers</li>
+                    <li class="last">- Installed and maintained public Internet access sites spanning two geographic regions</li>
+                    <li class="last">- Trained clients, volunteers and staff and regularly reported to a management committee regarding technical issues and assist planning</li>
+                 </ul>
+				 </p>
+							</div>
+
+							<div class="job last" bis_skin_checked="1">
+								<h2>Wide Bay Computers</h2>
+								<h3>Computer Technician and Consultant</h3>
+								<h4>January 1997 - December 1999</h4>
+								<p class="last">
+								<ul>
+                    <li class="last">- Built, repaired and serviced PCs</li>
+					<li class="last">- Troubleshooted network and PC problems (including intermittent issues)</li>
+                    <li class="last">- Shopfront & telephone sales, service, advice</li>
+                    <li class="last">- Called out to businesses/residential to provide installations, tuition, advice and repairs</li>
+                 </ul>
+				 </p>
+							</div>
+
+
+
+						</div><!--// .yui-u -->
+
+					
+					</div><!--// .yui-gf -->
+
+					
+				</div><!--// .yui-b -->
+			</div><!--// yui-main -->
+		</div><!--// bd -->
+
+		<div id="ft" bis_skin_checked="1">
+			<p>Ramon Rossi &nbsp &nbsp<a href="mailto:ramon_rossi@hotmail.com">ramon_rossi@hotmail.com</a> &nbsp &nbsp+44 7527 693486</p>
+			<p>You are visitor number <span id="NewVisitor"></span> </p>
+		</div><!--// footer -->
+
+	</div><!-- // inner -->
+
+
+</div>
+</div><!--// doc -->
+
+</body></html>
