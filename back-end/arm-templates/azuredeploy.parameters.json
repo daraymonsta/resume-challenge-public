@@ -6,7 +6,7 @@
             "value": "uksouth"
         },
         "resource_group": {
-            "value": "CloudResumeChallenge"
+            "value": "GeneralSettingsTest"
         },
         "template_uri_cosmos_db": {
             "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cosmos-db.json"
@@ -27,19 +27,19 @@
             "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cdn-custom-domain.json"
         },
         "website_storage_account_name": {
-            "value": "resumestorage002"
+            "value": "resumewebstorage101"
         },
         "cdn_profile_name": {
-            "value": "resumecdn002"
+            "value": "resumecdn101"
         },
         "endpointName": {
-            "value": "rayrossi"
+            "value": "generalsettings"
         },
         "dnszone_topleveldomain_name": {
-            "value": "net"
+            "value": "com"
         },
         "cosmos_db_account_name": {
-            "value": "sql-cosmos-db-account"
+            "value": "cosmosdbaccount101"
         },
         "cosmos_db_name": {
             "value": "ResumeDB"
@@ -51,10 +51,10 @@
             "value": "ukwest"
         },
         "function_app_name": {
-            "value": "az-func-visitor-api2"
+            "value": "funcvisitorapi101"
         },
         "app_storage_account_name": {
-            "value": "resumestorage002"
+            "value": "appstorage101"
         },
         "storageAccountType": {
             "value": "Standard_LRS"
