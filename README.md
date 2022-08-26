@@ -3,6 +3,7 @@
 ### Completed by Ramon Rossi
 
 Cloud provider used: only Microsoft Azure
+
 CI/CD pipline designed in: GitHub Actions
 
 ### Back-end
@@ -19,4 +20,4 @@ CI/CD pipline designed in: GitHub Actions
 - [Back-end deployment](https://github.com/daraymonsta/resume-challenge-public/blob/main/.github/workflows/back-deploy.yml)
 - [Front-end deployment](https://github.com/daraymonsta/resume-challenge-public/blob/main/.github/workflows/front-deploy.yml)
 
-The [Cloud Resume Challenge was devised by Forrest Brazeal](https://cloudresumechallenge.dev/instructions/).
+The Cloud Resume Challenge was devised by [Forrest Brazeal](https://cloudresumechallenge.dev/instructions/).
