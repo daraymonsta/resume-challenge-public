@@ -3,7 +3,6 @@
 ### Completed by Ramon Rossi
 
 Cloud provider used: only Microsoft Azure
-CI/CD pipline designed in: GitHub Actions
 
 ### Back-end
 
