@@ -27,10 +27,10 @@
             "value": "https://raw.githubusercontent.com/daraymonsta/resume-challenge-public/main/back-end/arm-templates/cdn-custom-domain.json"
         },
         "website_storage_account_name": {
-            "value": "resumewebstorage101"
+            "value": "resumewebstorage303"
         },
         "cdn_profile_name": {
-            "value": "resumecdn101"
+            "value": "resumecdnprofile303"
         },
         "endpointName": {
             "value": "generalsettings"
@@ -39,7 +39,7 @@
             "value": "com"
         },
         "cosmos_db_account_name": {
-            "value": "cosmosdbaccount101"
+            "value": "cosmosdbaccount303"
         },
         "cosmos_db_name": {
             "value": "ResumeDB"
@@ -51,10 +51,10 @@
             "value": "ukwest"
         },
         "function_app_name": {
-            "value": "funcvisitorapi101"
+            "value": "funcvisitorapi303"
         },
         "app_storage_account_name": {
-            "value": "appstorage101"
+            "value": "appstorage303"
         },
         "storageAccountType": {
             "value": "Standard_LRS"
