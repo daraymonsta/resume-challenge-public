@@ -1,6 +1,6 @@
 # Cloud Resume Challenge
 
-### Completed by Ramon Rossi
+### Completed resume at [rayrossi.net](https://www.rayrossi.net/)
 
 Cloud provider used: only Microsoft Azure
 
