@@ -1,6 +1,6 @@
 # Cloud Resume Challenge
 
-### Completed resume at [rayrossi.net](https://www.rayrossi.net/)
+### Result of completed challenge at [rayrossi.net](https://www.rayrossi.net/)
 
 Cloud provider used: only Microsoft Azure
 
